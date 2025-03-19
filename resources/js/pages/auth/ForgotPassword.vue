@@ -13,7 +13,7 @@ defineProps<{
 }>();
 
 const form = useForm({
-    email: '',
+    pf_no: '',
 });
 
 const submit = () => {
@@ -22,7 +22,9 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
+    <AuthLayout title="Forgot password"
+        description="Fill the form to get your password reset link on your registered email.">
+
         <Head title="Forgot password" />
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
@@ -32,9 +34,10 @@ const submit = () => {
         <div class="space-y-6">
             <form @submit.prevent="submit">
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input id="email" type="email" name="email" autocomplete="off" v-model="form.email" autofocus placeholder="email@example.com" />
-                    <InputError :message="form.errors.email" />
+                    <Label for="pf_no">PF No / Employee No</Label>
+                    <Input id="pf_no" type="text" name="pf_no" autocomplete="off" v-model="form.pf_no" autofocus
+                        placeholder="your pf no" />
+                    <InputError :message="form.errors.pf_no" />
                 </div>
 
                 <div class="my-6 flex items-center justify-start">

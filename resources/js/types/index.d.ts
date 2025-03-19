@@ -29,8 +29,10 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    designation: string;
+    pf_no: string;
+    dob: string;
     avatar?: string;
-    email_verified_at: string | null;
     created_at: string;
     updated_at: string;
 }
