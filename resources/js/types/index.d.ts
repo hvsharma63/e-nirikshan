@@ -32,6 +32,7 @@ export interface User {
     designation: string;
     pf_no: string;
     dob: string;
+    mobile_no: string;
     avatar?: string;
     created_at: string;
     updated_at: string;
