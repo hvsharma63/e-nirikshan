@@ -38,4 +38,23 @@ export interface User {
     updated_at: string;
 }
 
+
+export interface Inspection {
+    id: number;
+    location: string;
+    date: string;
+    inspection_type: string;
+    address: string;
+    attended_by: string;
+    deficiencies: Deficiencies[]; // Added property
+}
+
+export interface Deficiencies {
+    id: number;
+    inspection_id: number;
+    pertains_to: string;
+    is_viewed: boolean;
+    is_attended: boolean;
+    action_date: string;
+}
 export type BreadcrumbItemType = BreadcrumbItem;

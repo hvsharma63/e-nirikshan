@@ -59,14 +59,14 @@ onMounted(() => {
                 <form @submit.prevent="submit" class="space-y-6">
                     <div class="grid gap-2">
                         <Label for="pf_no">PF No.</Label>
-                        <Input id="pf_no" class="mt-1 block w-full disabled text-black" v-model="user.pf_no" required
-                            disabled />
+                        <Input id="pf_no" class="mt-1 block w-full disabled text-black dark:text-white"
+                            v-model="user.pf_no" required disabled />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="dob">Date of Birth</Label>
-                        <Input id="dob" class="mt-1 block w-full disabled text-black" v-model="user.dob" required
-                            disabled />
+                        <Input id="dob" class="mt-1 block w-full disabled text-black dark:text-white" v-model="user.dob"
+                            required disabled />
                     </div>
 
                     <div class="grid gap-2">

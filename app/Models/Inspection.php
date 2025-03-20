@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Inspection extends Model
 {
     protected $fillable = [
-        "location",
+        'location',
         'date',
         'inspection_type_id',
         'address',
