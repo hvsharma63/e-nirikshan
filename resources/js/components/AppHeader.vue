@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Menu, NotebookText, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -44,17 +44,17 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    {
+        title: 'Inspections',
+        href: '/inspections/create',
+        icon: NotebookText,
+    },
 ];
 
 const rightNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
         title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
+        href: 'https://pine-swift-34e.notion.site/E-Nirakshak-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
         icon: BookOpen,
     },
 ];

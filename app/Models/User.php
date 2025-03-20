@@ -25,6 +25,7 @@ class User extends Authenticatable
         'department_id',
         'dob',
         'pf_no',
+        'mobile_no'
     ];
 
     /**

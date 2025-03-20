@@ -31,6 +31,7 @@ const user = page.props.auth.user as User;
 const form = useForm({
     name: user.name,
     email: user.email,
+    mobile_no: user.mobile_no,
     designation: user.designation,
 });
 
@@ -57,6 +58,18 @@ onMounted(() => {
 
                 <form @submit.prevent="submit" class="space-y-6">
                     <div class="grid gap-2">
+                        <Label for="pf_no">PF No.</Label>
+                        <Input id="pf_no" class="mt-1 block w-full disabled text-black dark:text-white"
+                            v-model="user.pf_no" required disabled />
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="dob">Date of Birth</Label>
+                        <Input id="dob" class="mt-1 block w-full disabled text-black dark:text-white" v-model="user.dob"
+                            required disabled />
+                    </div>
+
+                    <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name"
                             placeholder="Full name" />
@@ -71,22 +84,17 @@ onMounted(() => {
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="pf_no">PF No.</Label>
-                        <Input id="pf_no" class="mt-1 block w-full disabled text-black" v-model="user.pf_no" required
-                            disabled />
-                    </div>
-
-                    <div class="grid gap-2">
-                        <Label for="dob">Date of Birth</Label>
-                        <Input id="dob" class="mt-1 block w-full disabled text-black" v-model="user.dob" required
-                            disabled />
-                    </div>
-
-                    <div class="grid gap-2">
                         <Label for="email">Email address</Label>
                         <Input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
                             autocomplete="username" placeholder="Email address" />
                         <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="mobile_no">Mobile No</Label>
+                        <Input id="mobile_no" type="mobile_no" class="mt-1 block w-full" v-model="form.mobile_no"
+                            required autocomplete="username" placeholder="Contact No" />
+                        <InputError class="mt-2" :message="form.errors.mobile_no" />
                     </div>
 
                     <div class="flex items-center gap-4">

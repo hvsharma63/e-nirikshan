@@ -26,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'designation' => ['required', 'string', 'max:255'],
+            'mobile_no' => ['required', 'digits:10'],
         ];
     }
 }

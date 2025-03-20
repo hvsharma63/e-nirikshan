@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('designation');
             $table->string('dob');
+            $table->string('mobile_no')->nullable();
             $table->string('pf_no')->default(null);
             $table->foreignIdFor(Department::class)->constrained();
         });
