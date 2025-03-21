@@ -89,6 +89,15 @@ const getStatusIcon = (deficiency: typeof deficiencies.value[0]) => {
     if (deficiency.is_viewed) return Clock;
     return AlertCircle;
 };
+
+const checkIsMobile = () => window.innerWidth < 768;
+const isMobile = ref(checkIsMobile());
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        isMobile.value = checkIsMobile();
+    });
+});
 </script>
 
 <template>
@@ -113,16 +122,21 @@ const getStatusIcon = (deficiency: typeof deficiencies.value[0]) => {
                         <AccordionItem v-for="deficiency in deficiencies" :key="deficiency.id"
                             :value="deficiency.id.toString()" class="border rounded-lg px-0">
                             <AccordionTrigger class="px-4 sm:px-6 hover:no-underline text-left w-full">
-                                <div class="flex items-center gap-3 w-full">
-                                    <component :is="getStatusIcon(deficiency)"
-                                        :class="['w-5 h-5', getStatusColor(deficiency)]" />
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="font-medium">{{ deficiency.inspection.location }}</h3>
-                                        <p class="text-sm text-gray-500 truncate">
-                                            {{ deficiency.comment_by_inspector }}
-                                        </p>
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
+                                    <div class="flex items-start gap-3 flex-1">
+                                        <component :is="getStatusIcon(deficiency)"
+                                            :class="['w-5 h-5 mt-1 sm:mt-0 flex-shrink-0', getStatusColor(deficiency)]" />
+                                        <div class="min-w-0 flex-1">
+                                            <h3 class="font-medium">{{ deficiency.inspection.location }}</h3>
+                                            <p class="text-sm text-gray-500 line-clamp-2 sm:line-clamp-1">
+                                                {{ deficiency.comment_by_inspector }}
+                                            </p>
+                                            <div class="text-sm text-gray-500 mt-1 sm:hidden">
+                                                Due: {{ formatDate(deficiency.inspection.date) }}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span class="text-sm text-gray-500">
+                                    <span class="hidden sm:block text-sm text-gray-500 whitespace-nowrap">
                                         {{ formatDate(deficiency.inspection.date) }}
                                     </span>
                                 </div>
@@ -130,7 +144,7 @@ const getStatusIcon = (deficiency: typeof deficiencies.value[0]) => {
                             <AccordionContent class="px-4 sm:px-6 pt-4">
                                 <div class="space-y-6 border-t pt-4">
                                     <!-- Inspection Details -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                                         <div class="space-y-3">
                                             <div>
                                                 <span class="text-sm text-gray-500">Location</span>
@@ -190,7 +204,7 @@ const getStatusIcon = (deficiency: typeof deficiencies.value[0]) => {
 
                                             <div class="flex justify-end">
                                                 <Button type="submit" :disabled="deficiency.is_attended || isSubmitting"
-                                                    :loading="isSubmitting">
+                                                    :loading="isSubmitting" class="w-full sm:w-auto">
                                                     Submit Response
                                                 </Button>
                                             </div>
@@ -205,3 +219,9 @@ const getStatusIcon = (deficiency: typeof deficiencies.value[0]) => {
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+.accordion-trigger[data-state='open'] .chevron {
+    transform: rotate(180deg);
+}
+</style>
