@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
                 "mobile_no" => "8355838741"
             ],
             [
-                "name" => "SANJEEVKUMAR",
+                "name" => "SANJEEV KUMAR",
                 "email" => null,
                 "password" => "05071985",
                 "designation" => "AEN/ENGINEERING/JAMNAGAR/WR",

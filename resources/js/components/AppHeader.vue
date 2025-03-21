@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, NotebookText, Search } from 'lucide-vue-next';
+import { BookOpen, CalendarClock, Folder, LayoutGrid, Menu, NotebookText, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -46,9 +46,20 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Inspections',
+        href: '/inspections',
+        icon: NotebookText,
+    },
+    {
+        title: 'Diarise Inspections',
         href: '/inspections/create',
         icon: NotebookText,
     },
+    {
+        title: 'Received Deficiencies',
+        href: '/deficiencies',
+        icon: CalendarClock,
+    },
+
 ];
 
 const rightNavItems: NavItem[] = [

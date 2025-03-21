@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('address');
             $table->foreignIdFor(User::class, 'attended_by')->constrained();
             $table->enum('daytime', ['day', 'night']);
+            $table->enum('status', ['completed', 'pending', 'in-progress', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }

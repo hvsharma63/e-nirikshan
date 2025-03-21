@@ -11,6 +11,8 @@ class Deficiency extends Model
         'pertains_to',
         'is_viewed',
         'is_attended',
+        'comment_by_inspector',
+        'comment_by_pertaining_officer',
         'action_date',
     ];
 }

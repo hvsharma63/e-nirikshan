@@ -12,4 +12,14 @@ class InspectionController extends Controller
     {
         return Inertia::render('inspection/Create');
     }
+
+    public function index(): Response
+    {
+        return Inertia::render('inspection/List');
+    }
+
+    public function view(): Response
+    {
+        return Inertia::render('inspection/View');
+    }
 }
