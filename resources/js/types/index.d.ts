@@ -46,7 +46,8 @@ export interface Inspection {
     inspection_type: string;
     address: string;
     attended_by: string;
-    deficiencies: Deficiencies[]; // Added property
+    deficiencies: Deficiencies[];
+    status: string;
 }
 
 export interface Deficiencies {
@@ -55,6 +56,19 @@ export interface Deficiencies {
     pertains_to: string;
     is_viewed: boolean;
     is_attended: boolean;
+    comment_by_inspector: string;
+    comment_by_pertaining_officer: string;
+    action_date: string;
+}
+
+export interface Deficiency {
+    id: number;
+    inspection_id: number;
+    pertains_to: string;
+    is_viewed: boolean;
+    is_attended: boolean;
+    comment_by_inspector: string;
+    comment_by_pertaining_officer: string;
     action_date: string;
 }
 export type BreadcrumbItemType = BreadcrumbItem;

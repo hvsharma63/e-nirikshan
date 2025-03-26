@@ -14,6 +14,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Inspection::class)->constrained();
             $table->foreignIdFor(User::class, 'pertains_to')->constrained();
+            $table->longText('comment_by_inspector')->nullable();
+            $table->longText('comment_by_pertaining_officer')->nullable();
             $table->boolean('is_viewed')->default(false);
             $table->boolean('is_attended')->default(false);
             $table->date('action_date')->nullable();

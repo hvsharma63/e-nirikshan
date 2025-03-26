@@ -14,10 +14,6 @@ import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Inspections',
-        href: '/inspections',
-    },
-    {
         title: 'Diarise Inspection',
         href: '/inspections/create',
     },
@@ -76,10 +72,10 @@ const submit = () => {
                             </div>
 
                             <div class="space-y-2">
-                                <Label for="date">Inspection Date & Time</Label>
+                                <Label for="date">Inspection Date</Label>
                                 <div class="flex items-center gap-2">
                                     <CalendarIcon class="h-5 w-5 text-muted-foreground" />
-                                    <Input id="date" type="datetime-local" required :tabindex="2" v-model="form.date" />
+                                    <Input id="date" type="date" required :tabindex="2" v-model="form.date" />
                                 </div>
                                 <InputError :message="form.errors.date" />
                             </div>
@@ -133,9 +129,9 @@ const submit = () => {
                                             v-model="deficiency.pertainsTo"
                                             class="w-full rounded-md border border-input bg-background px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                                             <option disabled value="">Select User</option>
-                                            <option value="user1">User 1</option>
-                                            <option value="user2">User 2</option>
-                                            <option value="user3">User 3</option>
+                                            <option value="user1">Birdi Chand - ADFM/ACCOUNTS/RAJKOT/WR</option>
+                                            <option value="user2">Hasmukh Chunawala - APO/PERSONNEL/RAJKOT/WR</option>
+                                            <option value="user3">Sanjeev Kumar - AEN/ENGINEERING/JAMNAGAR/WR</option>
                                         </select>
                                     </div>
                                     <div class="mt-4 flex justify-end">
@@ -159,10 +155,14 @@ const submit = () => {
                             <!-- End of Deficiencies Section -->
                         </div>
 
-                        <div class="flex justify-end">
+                        <div class="flex justify-end gap-2">
+                            <Button type="submit" class="btn-secondary w-full sm:w-auto" :disabled="form.processing">
+                                <LoaderCircle v-if="form.processing" class="mr-2 h-5 w-5 animate-spin" />
+                                Save Draft
+                            </Button>
                             <Button type="submit" class="btn-primary w-full sm:w-auto" :disabled="form.processing">
                                 <LoaderCircle v-if="form.processing" class="mr-2 h-5 w-5 animate-spin" />
-                                Create Inspection
+                                Diarise
                             </Button>
                         </div>
                     </form>

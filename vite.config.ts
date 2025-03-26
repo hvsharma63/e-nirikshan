@@ -33,4 +33,12 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
+    // server: {
+    //     host: '192.168.137.90',  // Change this to your local IP
+    //     port: 5173,
+    //     strictPort: true,
+    //     hmr: {
+    //         host: '192.168.137.90', // Ensure HMR (Hot Module Replacement) works
+    //     },
+    // },
 });

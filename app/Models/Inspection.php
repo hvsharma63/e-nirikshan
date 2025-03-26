@@ -12,6 +12,7 @@ class Inspection extends Model
         'inspection_type_id',
         'address',
         'attended_by',
-        'daytime'
+        'daytime',
+        'status',
     ];
 }

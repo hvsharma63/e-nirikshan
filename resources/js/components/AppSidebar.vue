@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, NotebookText } from 'lucide-vue-next';
+import { BookOpen, CalendarClock, Folder, LayoutGrid, NotebookText, ScrollText } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -15,9 +15,19 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Inspections',
+        title: 'My Inspections',
+        href: '/inspections',
+        icon: ScrollText,
+    },
+    {
+        title: 'Diarise Inspections',
         href: '/inspections/create',
         icon: NotebookText,
+    },
+    {
+        title: 'Received Deficiencies',
+        href: '/deficiencies',
+        icon: CalendarClock,
     },
 ];
 
