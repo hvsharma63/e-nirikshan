@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InspectionType extends Model
+class Comment extends Model
 {
     protected $fillable = [
-        "name",
+        'deficiency_id',
+        'comment_by',
+        'comment',
     ];
 }

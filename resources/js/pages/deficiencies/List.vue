@@ -8,10 +8,10 @@ import TableHead from '@/components/ui/table/TableHead.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Inspection, type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { ListDeficiencies, SharedData, type BreadcrumbItem } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { Calendar, Eye, LocateFixed, UserRound, CheckCircle2, Clock, AlertCircle } from 'lucide-vue-next';
+import { Calendar, Eye, LocateFixed, UserRound, CheckCircle2, Clock, AlertCircle, Hash } from 'lucide-vue-next';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,37 +20,58 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const deficiencies = [
-    {
-        id: 1,
-        location: 'LC-250',
-        type: 'Safety Violation',
-        note: 'Gate lodge requires immediate maintenance',
-        date: '2023-11-15',
-        inspected_by: 'Arya Kirnendu',
-        is_attended: true,
-        action_date: '2023-11-20'
-    },
-    {
-        id: 2,
-        location: 'LC-342',
-        type: 'Equipment Malfunction',
-        note: 'Lifting barrier not working properly',
-        date: '2023-11-14',
-        inspected_by: 'Raj Mehta',
-        is_attended: false,
-        action_date: null
-    },
-];
+const page = usePage<SharedData>();
 
-const getAttendanceStatus = (isAttended: boolean) => {
-    return isAttended
-        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+const deficiencies: ListDeficiencies[] = (page.props.deficiencies?.data as ListDeficiencies[]) ?? [];
+
+// Modify status badge styling utility
+const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+        case 'attended':
+            return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        case 'pending':
+            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+        case 'seen':
+            return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+        default:
+            return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    }
 };
 
-const getAttendanceIcon = (isAttended: boolean) => {
-    return isAttended ? CheckCircle2 : Clock;
+// Modify icon utility for status
+const getStatusIcon = (status: string) => {
+    switch (status.toLowerCase()) {
+        case 'attended':
+            return CheckCircle2;
+        case 'pending':
+            return AlertCircle;
+        case 'seen':
+            return Clock;
+        default:
+            return AlertCircle;
+    }
+};
+
+// Add utility functions for headers and cells
+const getHeaderIcon = (header: string) => {
+    const icons = {
+        'Sr. No.': Hash,
+        'Location': LocateFixed,
+        'Deficiency Note': AlertCircle,
+        'Inspected By': UserRound,
+        'Inspection Date': Calendar,
+        'Inspection Time': Clock,
+        'Action Date': Calendar,
+        'Status': Clock,
+        'Actions': Eye
+    };
+    return icons[header] || AlertCircle;
+};
+
+const getCellTextClass = (field: string) => {
+    return field === 'location'
+        ? 'font-semibold text-gray-900 dark:text-white'
+        : 'text-gray-900 dark:text-white';
 };
 
 // Add a utility function for responsive layout
@@ -59,97 +80,79 @@ window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 768;
 });
 
-// Add view handler method
-const viewInspection = (id: number) => {
-    // You can use Inertia Link or router to navigate
-    window.location.href = `/inspections/${id}`;
-};
 </script>
 
 <template>
 
-    <Head title="Deficiencies" />
+    <Head title="My Deficiencies" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col space-y-6 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-8">
-            <h2 class="text-xl font-semibold tracking-tight sm:text-2xl">Deficiencies pertaining to me</h2>
+        <div class="flex h-full flex-1 flex-col space-y-8 rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800 sm:p-8">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Deficiencies Pertaining to Me
+            </h2>
 
-            <div class="overflow-x-auto">
-                <Table class="min-w-full">
-                    <TableHeader class="hidden md:table-header-group">
-                        <TableRow>
-                            <TableHead class="py-4">Sr. No.</TableHead>
-                            <TableHead class="w-[100px] py-4">Location</TableHead>
-                            <TableHead class="py-4">Type</TableHead>
-                            <TableHead class="py-4">Note</TableHead>
-                            <TableHead class="py-4">
-                                <div class="flex items-center gap-2">
-                                    <Calendar class="h-4 w-4" /> Date
+            <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+                <Table class="w-full">
+                    <TableCaption v-if="!deficiencies?.length" class="py-8">
+                        <div class="flex flex-col items-center justify-center space-y-4 text-center">
+                            <p class="text-lg font-medium text-gray-600 dark:text-gray-300">No deficiencies found</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">If deficiencies get assigned to you,
+                                they will appear here.</p>
+                        </div>
+                    </TableCaption>
+                    <TableHeader class="hidden bg-gray-50 dark:bg-gray-800/90 md:table-header-group">
+                        <TableRow class="border-b border-gray-200 dark:border-gray-700">
+                            <TableHead
+                                v-for="header in ['Sr. No.', 'Location', 'Deficiency Note', 'Inspected By', 'Inspection Date', 'Inspection Time', 'Action Date', 'Status', 'Actions']"
+                                :key="header"
+                                class="py-4 px-6 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                :class="{ 'text-right': header === 'Actions' }">
+                                <div class="flex items-center gap-2" :class="{ 'justify-end': header === 'Actions' }">
+                                    <component :is="getHeaderIcon(header)" class="h-4 w-4 text-gray-500" />
+                                    {{ header }}
                                 </div>
                             </TableHead>
-                            <TableHead class="py-4">
-                                <div class="flex items-center gap-2">
-                                    <UserRound class="h-4 w-4" /> Inspected By
-                                </div>
-                            </TableHead>
-                            <TableHead class="py-4">Status</TableHead>
-                            <TableHead class="py-4">Action Date</TableHead>
-                            <TableHead class="w-[100px] py-4 text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        <TableRow v-for="deficiency in deficiencies" :key="deficiency.id" class="block border-b border-gray-200 md:table-row md:border-0
-                            even:bg-gray-50/50 dark:even:bg-gray-800/50 
-                            md:even:bg-transparent
-                            hover:bg-gray-100 dark:hover:bg-gray-700/50 
-                            transition-colors
-                            mb-3 md:mb-0
-                            rounded-lg md:rounded-none
-                            shadow-sm md:shadow-none
-                            p-4 md:p-0">
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Sr. No.</span>
-                                <span class="font-semibold">{{ deficiency.id }}</span>
+                    <TableBody v-if="deficiencies.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <TableRow v-for="deficiency in deficiencies" :key="deficiency.id" class="group block transition-colors md:table-row
+                                       hover:bg-gray-50/80 dark:hover:bg-gray-800/80
+                                       md:hover:shadow-sm">
+                            <TableCell v-for="(field, key) in {
+                                id: 'Sr. No.',
+                                location: 'Location',
+                                note: 'Deficiency Note',
+                                attended_by: 'Inspected By',
+                                date: 'Inspection Date',
+                                time: 'Inspection Time',
+                                action_date: 'Action Date'
+                            }" :key="key" class="flex items-center justify-between p-4 md:table-cell md:py-4 md:px-6">
+                                <span class="flex items-center gap-2 font-medium text-gray-500 md:hidden">
+                                    <component :is="getHeaderIcon(field)" class="h-4 w-4" />
+                                    {{ field }}
+                                </span>
+                                <span :class="getCellTextClass(key)">{{ deficiency[key] ?? '-' }}</span>
                             </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Location</span>
-                                <span class="font-semibold">{{ deficiency.location }}</span>
-                            </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Type</span>
-                                <span>{{ deficiency.type }}</span>
-                            </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Note</span>
-                                <span>{{ deficiency.note }}</span>
-                            </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Date</span>
-                                <span>{{ deficiency.date }}</span>
-                            </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Inspected By</span>
-                                <span>{{ deficiency.inspected_by }}</span>
-                            </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Status</span>
+                            <TableCell class="flex items-center justify-between p-4 md:table-cell md:py-4 md:px-6">
+                                <span class="flex items-center gap-2 font-medium text-gray-500 md:hidden">
+                                    <Clock class="h-4 w-4" /> Status
+                                </span>
                                 <span
-                                    class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
-                                    :class="getAttendanceStatus(deficiency.is_attended)">
-                                    <component :is="getAttendanceIcon(deficiency.is_attended)" class="h-3.5 w-3.5" />
-                                    {{ deficiency.is_attended ? 'Attended' : 'Pending' }}
+                                    class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium shadow-sm transition-colors"
+                                    :class="getStatusColor(deficiency?.status)">
+                                    <component :is="getStatusIcon(deficiency?.status)" class="h-3.5 w-3.5" />
+                                    {{ deficiency?.status }}
                                 </span>
                             </TableCell>
-                            <TableCell class="flex items-center justify-between py-2 md:table-cell md:py-3">
-                                <span class="font-medium text-gray-500 md:hidden">Action Date</span>
-                                <span>{{ deficiency.action_date || '-' }}</span>
-                            </TableCell>
                             <TableCell
-                                class="flex items-center justify-between py-2 md:table-cell md:py-3 md:text-right">
-                                <span class="font-medium text-gray-500 md:hidden">Actions</span>
-                                <Link :href="`/deficiencies/view`"
-                                    class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 h-9 px-4 py-2">
+                                class="flex items-center justify-between p-4 md:table-cell md:py-4 md:px-6 md:text-right">
+                                <span class="flex items-center gap-2 font-medium text-gray-500 md:hidden">
+                                    <Eye class="h-4 w-4" /> Actions
+                                </span>
+                                <Link :href="`/deficiencies/${deficiency.id}`"
+                                    class="inline-flex items-center justify-center gap-2 rounded-md bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white">
                                 <Eye class="h-4 w-4" />
+                                <span class="md:hidden">View Details</span>
                                 </Link>
                             </TableCell>
                         </TableRow>
@@ -162,9 +165,12 @@ const viewInspection = (id: number) => {
 
 <style scoped>
 @media (max-width: 768px) {
-    :deep(td::before) {
-        content: attr(data-label);
-        font-weight: 500;
+    :deep(td) {
+        @apply rounded-lg bg-white dark:bg-gray-800;
+    }
+
+    :deep(tr:not(:last-child) td) {
+        @apply mb-2;
     }
 }
 </style>

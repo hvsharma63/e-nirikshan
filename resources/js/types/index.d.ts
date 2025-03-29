@@ -38,15 +38,24 @@ export interface User {
     updated_at: string;
 }
 
-
-export interface Inspection {
+export interface ListInspections {
     id: number;
     location: string;
     date: string;
-    inspection_type: string;
-    address: string;
+    time: string;
+    day_period: string;
+    deficiencies_count: number;
+    status: string;
+}
+
+export interface ListDeficiencies {
+    id: number;
+    location: string;
+    note: string;
+    action_date: string;
     attended_by: string;
-    deficiencies: Deficiencies[];
+    date: string;
+    time: string;
     status: string;
 }
 
@@ -71,4 +80,5 @@ export interface Deficiency {
     comment_by_pertaining_officer: string;
     action_date: string;
 }
+
 export type BreadcrumbItemType = BreadcrumbItem;

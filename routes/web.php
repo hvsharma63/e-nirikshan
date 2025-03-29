@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Deficiency\DeficiencyController;
 use App\Http\Controllers\Inspection\InspectionController;
 use Illuminate\Support\Facades\Route;
@@ -16,9 +17,11 @@ Route::get('dashboard', function () {
 
 Route::middleware(['auth'])->group( function () {
 
-    Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
+    Route::get('users', [RegisteredUserController::class,'listUsersForDropdown'])->name('users.list');
     Route::get('inspections', [InspectionController::class, 'index'])->name('inspections.index');
-    Route::get('inspections/view', [InspectionController::class, 'view'])->name('inspections.view');
+    Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
+    Route::post('inspections', [InspectionController::class, 'save'])->name('inspections.save');
+    Route::get('inspections', [InspectionController::class, 'view'])->name('inspections.view');
     Route::get('deficiencies', [DeficiencyController::class, 'index'])->name('deficiencies.index');
     Route::get('deficiencies/view', [DeficiencyController::class, 'view'])->name('deficiencies.view');
     

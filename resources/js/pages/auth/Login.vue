@@ -28,7 +28,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="E-Nirakshak" description="Log in to your account">
+    <AuthBase title="E-nirikshan" description="Log in to your account">
 
         <Head title="Log in" />
 
