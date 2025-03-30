@@ -30,7 +30,6 @@ class InspectionService {
         return $inspection;
     }
 
-    public function get(int $id) {
-        
+    public function get(int $inspectionId, int $userId) {
     }
 }

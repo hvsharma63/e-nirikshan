@@ -21,7 +21,8 @@ Route::middleware(['auth'])->group( function () {
     Route::get('inspections', [InspectionController::class, 'index'])->name('inspections.index');
     Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
     Route::post('inspections', [InspectionController::class, 'save'])->name('inspections.save');
-    Route::get('inspections', [InspectionController::class, 'view'])->name('inspections.view');
+    Route::get('inspections/{id}', [InspectionController::class, 'view'])->name('inspections.view');
+    Route::post('deficiencies/{id}/remind', [DeficiencyController::class, 'remind'])->name('deficiencies.remind');
     Route::get('deficiencies', [DeficiencyController::class, 'index'])->name('deficiencies.index');
     Route::get('deficiencies/view', [DeficiencyController::class, 'view'])->name('deficiencies.view');
     

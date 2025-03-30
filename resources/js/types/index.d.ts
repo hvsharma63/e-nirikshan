@@ -81,4 +81,36 @@ export interface Deficiency {
     action_date: string;
 }
 
+export interface ItemDeficiency {
+    id: number;
+    pertains_to: ItemDeficiencyPertainsTo;
+    note: string;
+    action_date: string;
+    status: string;
+    reported_on: string;
+    is_pending: boolean;
+    is_seen: boolean;
+    is_attended: boolean;
+    comment_by_pertaining_officer: string;
+}
+
+export interface ItemDeficiencyPertainsTo {
+    id: number;
+    name: string;
+    designation: string;
+}
+
+export interface ViewInspection {
+    id: number;
+    location: string;
+    address: string;
+    attended_by: string;
+    datetime: string;
+    note: string;
+    day_period: string;
+    no_deficiencies_found: boolean;
+    status: string;
+    deficiencies: ItemDeficiency[];
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

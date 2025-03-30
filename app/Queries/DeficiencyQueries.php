@@ -20,4 +20,10 @@ class DeficiencyQueries {
             ->orderByDesc('created_at')
             ->get();
     }
+
+    public function get(int $deficiencyId): ?Deficiency {
+        return Deficiency::query()
+            ->with(['pertainsTo:id,name,email'])
+            ->findOrFail($deficiencyId);
+    }
 }

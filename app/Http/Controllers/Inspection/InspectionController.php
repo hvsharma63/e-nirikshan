@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inspection;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inspection\InspectionCreateRequest;
 use App\Http\Resources\Inspection\ListInspectionResource;
+use App\Http\Resources\ViewInspectionResource;
 use App\Queries\InspectionQueries;
 use App\Services\InspectionService;
 use Illuminate\Support\Facades\Auth;
@@ -51,8 +52,12 @@ class InspectionController extends Controller
         ]);
     }
 
-    public function view(): Response
+    public function view(int $id): Response
     {
-        return Inertia::render('inspection/View');
+        $inspection = $this->inspectionQueries->get($id, Auth::id());
+
+        return Inertia::render('inspection/View', [
+            'inspection' => new ViewInspectionResource($inspection),
+        ]);
     }
 }

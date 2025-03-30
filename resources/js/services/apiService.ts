@@ -15,10 +15,9 @@ export default {
     async post(url: string, data: any, config: any = {}) {
         try {
             const response = await axios.post(url, data, config);
-            toastSuccess('Data posted successfully.');
             return response.data;
         } catch (error) {
-            toastError('Post request failed.');
+            toastError('Something Went Wrong!');
             throw error;
         }
     },
@@ -26,10 +25,9 @@ export default {
     async put(url: string, data: any, config: any = {}) {
         try {
             const response = await axios.put(url, data, config);
-            toastSuccess('Data updated successfully.');
             return response.data;
         } catch (error) {
-            toastError('Put request failed.');
+            toastError('Something Went Wrong!');
             throw error;
         }
     },
@@ -37,10 +35,9 @@ export default {
     async delete(url: string, config: any = {}) {
         try {
             const response = await axios.delete(url, config);
-            toastSuccess('Deleted successfully.');
             return response.data;
         } catch (error) {
-            toastError('Delete request failed.');
+            toastError('Something Went Wrong!');
             throw error;
         }
     },

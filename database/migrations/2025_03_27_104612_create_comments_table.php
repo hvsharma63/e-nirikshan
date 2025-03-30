@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Deficiency::class)->constrained();
             $table->foreignIdFor(User::class, 'comment_by')->constrained();
-            $table->tinyText('comment');
+            $table->text('comment');
             $table->timestamps();
         });
     }

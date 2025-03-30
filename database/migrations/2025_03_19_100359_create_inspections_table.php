@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('location');
             $table->timestamp('datetime');
             $table->text('address');
+            $table->text('note');
             $table->foreignIdFor(User::class, 'attended_by')->constrained();
             $table->tinyInteger('day_period');
             $table->tinyInteger('status');

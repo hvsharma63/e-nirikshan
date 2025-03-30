@@ -6,12 +6,12 @@ import Label from '@/components/ui/label/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import { LoaderCircle, NotebookIcon } from 'lucide-vue-next';
 import Card from '@/components/ui/card/Card.vue';
 import { CalendarIcon, MapPinIcon, UserIcon, ClockIcon } from 'lucide-vue-next';
 import { PlusCircleIcon, TrashIcon } from 'lucide-vue-next';
 import { ref, onMounted } from 'vue';
-import apiService from '@/services/apiService'; // Adjust the path as per your project structure
+import apiService from '@/services/apiService';
 import 'vue-select/dist/vue-select.css';
 import { CheckIcon } from 'lucide-vue-next';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -30,6 +30,7 @@ const form = useForm({
     location: '',
     datetime: '',
     address: '',
+    note: '',
     is_draft: false as boolean,
     attended_by: user.name,
     attended_by_id: user.id,
@@ -123,11 +124,23 @@ onMounted(() => {
                                 <div class="flex items-center gap-2">
                                     <MapPinIcon class="h-5 w-5 text-muted-foreground" />
                                     <textarea id="address" type="text" required :tabindex="5"
-                                        class="w-full h-24 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                        class="w-full h-14 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                         placeholder="Enter complete address" v-model="form.address">
                                 </textarea>
                                 </div>
                                 <InputError :message="form.errors.address" />
+                            </div>
+
+                            <div class="sm:col-span-2 space-y-2">
+                                <Label for="note">Notes</Label>
+                                <div class="flex items-center gap-2">
+                                    <NotebookIcon class="h-5 w-5 text-muted-foreground" />
+                                    <textarea id="note" type="text" required :tabindex="5"
+                                        class="w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                        placeholder="Enter your observations" v-model="form.note">
+                                </textarea>
+                                </div>
+                                <InputError :message="form.errors.note" />
                             </div>
 
                             <!-- Modified Deficiencies Section -->

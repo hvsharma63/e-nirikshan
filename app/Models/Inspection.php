@@ -15,6 +15,7 @@ class Inspection extends Model
         'address',
         'attended_by',
         'datetime',
+        'note',
         'day_period',
         'no_deficiencies_found',
         'status',
