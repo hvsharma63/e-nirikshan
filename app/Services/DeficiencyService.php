@@ -25,9 +25,9 @@ class DeficiencyService {
         
     }
 
-    public function view(int $deficiencyId): ?Deficiency {
+    public function view(int $deficiencyId, int $userId): ?Deficiency {
 
-        $deficiency = $this->deficiencyQueries->view($deficiencyId);
+        $deficiency = $this->deficiencyQueries->view($deficiencyId, $userId);
 
         if( $deficiency->status != DeficiencyStatusEnum::ATTENDED() && $deficiency->status != DeficiencyStatusEnum::SEEN()) {
             $this->deficiencyQueries->updateStatus($deficiency->id, DeficiencyStatusEnum::SEEN);

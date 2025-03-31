@@ -13,11 +13,14 @@ import { PlusCircleIcon, TrashIcon } from 'lucide-vue-next';
 import { ref, onMounted } from 'vue';
 import apiService from '@/services/apiService';
 import 'vue-select/dist/vue-select.css';
-import { CheckIcon } from 'lucide-vue-next';
 import { Checkbox } from '@/components/ui/checkbox';
 import vSelect from 'vue-select'
 
 const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'My Inspections',
+        href: '/inspections',
+    },
     {
         title: 'Diarise Inspection',
         href: '/inspections/create',

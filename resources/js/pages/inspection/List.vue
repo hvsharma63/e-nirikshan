@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
@@ -29,7 +30,7 @@ import { onMounted } from 'vue';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'My Inspections',
-        href: '/inspections/create',
+        href: '/inspections',
     },
 ];
 const page = usePage<SharedData>();
@@ -70,12 +71,6 @@ window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 768;
 });
 
-// Add view handler method
-const viewInspection = (id: number) => {
-    // You can use Inertia Link or router to navigate
-    window.location.href = `/inspections/${id}`;
-};
-
 // Add these utility functions
 const getHeaderIcon = (header: string) => {
     const icons = {
@@ -109,14 +104,22 @@ onMounted(() => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col space-y-8 rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800 sm:p-8">
-            <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">My Inspections</h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">My Inspections</h2>
+                <Link href="/inspections/create">
+                <Button class="gap-2">
+                    <Calendar class="h-4 w-4" />
+                    Diarise Inspection
+                </Button>
+                </Link>
+            </div>
 
             <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
                 <Table class="w-full">
                     <TableCaption v-if="!inspections?.length" class="py-8">
                         <div class="flex flex-col items-center justify-center space-y-4 text-center">
                             <p class="text-lg font-medium text-gray-600 dark:text-gray-300">No inspections found</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">When you create inspections, they will
+                            <p class="text-sm text-gray-500 dark:text-gray-400">When you diarise inspections, they will
                                 appear here.</p>
                         </div>
                     </TableCaption>

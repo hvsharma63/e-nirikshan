@@ -23,11 +23,10 @@ class DeficiencyReportedNotification extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New Deficiency Reported')
-            ->line('A new deficiency has been reported that requires your attention.')
-            ->line('Location: ' . $this->deficiency->inspection->location)
-            ->line('Note: ' . $this->deficiency->note)
-            ->action('View Deficiency', url('/deficiencies/' . $this->deficiency->id))
-            ->line('Please take necessary action.');
+            ->subject('Important: New Deficiency Report - Action Required')
+            ->markdown('emails.deficiency-notification', [
+                'deficiency' => $this->deficiency,
+                'notifiable' => $notifiable
+            ]);
     }
 }

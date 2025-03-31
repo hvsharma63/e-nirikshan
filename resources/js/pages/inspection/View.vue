@@ -27,6 +27,10 @@ import apiService from '@/services/apiService';
 import { toast } from '@/components/ui/toast';
 
 const breadcrumbs = [
+    {
+        title: 'My Inspections',
+        href: '/inspections',
+    },
     { title: 'Inspection Details', href: '/inspections/view' }
 ];
 

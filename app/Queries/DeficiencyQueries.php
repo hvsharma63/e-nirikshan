@@ -28,7 +28,7 @@ class DeficiencyQueries {
             ->findOrFail($deficiencyId);
     }
 
-    public function view(int $deficiencyId): ?Deficiency {
+    public function view(int $deficiencyId, int $userId): ?Deficiency {
         return Deficiency::query()
             ->withOnly([
                 'inspection:id,location,address,attended_by,datetime,note,day_period,status',
@@ -36,6 +36,7 @@ class DeficiencyQueries {
                 'comment:id,deficiency_id,comment_by,comment'
             ])
             ->select(['id', 'inspection_id','pertains_to', 'note', 'status','action_date', 'created_at'])
+            ->where('pertains_to', $userId)
             ->findOrFail($deficiencyId);
     }
 
