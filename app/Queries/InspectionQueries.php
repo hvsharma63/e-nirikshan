@@ -38,4 +38,10 @@ class InspectionQueries {
             ->where('attended_by', $userId)
             ->findOrFail($inspectionId);
     }
+
+    public function update(int $inspectionId, array $inspectionData): void {
+        Inspection::query()
+            ->where('id', $inspectionId)
+            ->update($inspectionData);
+    }
 }

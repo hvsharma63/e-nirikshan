@@ -15,7 +15,7 @@ class ItemDeficiencyResource extends JsonResource
             'id' => $this->id,
             'pertains_to' => $this->pertainsTo,
             'note' => $this->note,
-            'action_date' => $this->action_date ? Carbon::parse($this->action_date)->format('d M Y H:i A') : '-',
+            'action_date' => $this->action_date ? Carbon::parse($this->action_date)->format('d M Y') : '-',
             'status' => DeficiencyStatusEnum::fromValue($this->status)->description,
             'reported_on' => $this->created_at->format('d M Y H:i A'),
             'is_pending' => $this->is_pending,

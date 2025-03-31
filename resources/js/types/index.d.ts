@@ -104,7 +104,7 @@ export interface ViewInspection {
     id: number;
     location: string;
     address: string;
-    attended_by: string;
+    attended_by: ItemDeficiencyPertainsTo;
     datetime: string;
     note: string;
     day_period: string;
@@ -112,5 +112,24 @@ export interface ViewInspection {
     status: string;
     deficiencies: ItemDeficiency[];
 }
+
+
+export interface ViewDeficiency {
+    id: number;
+    inspection_id: number;
+    location: string;
+    address: string;
+    attended_by: string;
+    datetime: string;
+    inspection_note: string;
+    deficiency_note: string;
+    day_period: string;
+    inspection_status: string;
+    deficiency_status: string;
+    action_date: string;
+    comment: string;
+    deficiency_created_at: string;
+}
+
 
 export type BreadcrumbItemType = BreadcrumbItem;

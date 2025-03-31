@@ -8,5 +8,5 @@ final class DeficiencyStatusEnum extends Enum
 {
     const PENDING = 0;
     const SEEN = 1;
-    const ATTENEDED = 2;
+    const ATTENDED = 2;
 }

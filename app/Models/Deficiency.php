@@ -21,6 +21,7 @@ class Deficiency extends Model
     ];
 
     protected $casts = [
+        'action_date' => 'date',
         'status' => DeficiencyStatusEnum::class,
     ];
 
@@ -36,7 +37,7 @@ class Deficiency extends Model
 
     public function getIsAttendedAttribute(): bool
     {
-        return $this->status->value === DeficiencyStatusEnum::ATTENEDED;
+        return $this->status->value === DeficiencyStatusEnum::ATTENDED;
     }
 
     public function inspection(): BelongsTo {

@@ -173,12 +173,12 @@ onMounted(() => {
                                             <span class="text-sm text-gray-500 block">{{
                                                 deficiency.pertains_to.designation }}</span>
                                             <div class="text-sm text-gray-500 mt-1 sm:hidden">
-                                                Due: {{ deficiency.action_date }}
+                                                Action Date: {{ deficiency.action_date }}
                                             </div>
                                         </div>
                                     </div>
                                     <span class="hidden sm:block text-sm text-gray-500 whitespace-nowrap">
-                                        Due: {{ deficiency.action_date }}
+                                        Action Date: {{ deficiency.action_date }}
                                     </span>
                                 </div>
                             </AccordionTrigger>
@@ -198,76 +198,100 @@ onMounted(() => {
                                         </div>
 
                                         <div class="bg-gray-50 p-4 rounded-lg">
-                                            <h4 class="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                                            <h4 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
                                                 <User class="w-4 h-4" />Pertaining Officer's Response
                                             </h4>
-                                            <div class="mb-4">
-                                                <span class="font-medium text-gray-900">{{ deficiency.pertains_to.name
-                                                    }}</span>
-                                                <span class="text-sm text-gray-500 block">{{
-                                                    deficiency.pertains_to.designation }}</span>
-                                            </div>
-                                            <p class="text-gray-700">
-                                                {{ deficiency.comment_by_pertaining_officer }}
-                                            </p>
 
-                                            <!-- Status Timeline -->
-                                            <div class="mt-6 relative">
-                                                <div
-                                                    class="absolute left-[1.3rem] top-2 h-[calc(100%-16px)] w-0.5 bg-gray-200">
+                                            <!-- Officer Info & Action Date -->
+                                            <div class="flex flex-col gap-4 p-3 bg-white rounded-md mb-4">
+                                                <div class="flex items-start gap-3">
+                                                    <User class="w-4 h-4 mt-1 text-gray-500" />
+                                                    <div>
+                                                        <span class="font-medium text-gray-900">{{
+                                                            deficiency.pertains_to.name }}</span>
+                                                        <span class="text-sm text-gray-500 block">{{
+                                                            deficiency.pertains_to.designation }}</span>
+                                                    </div>
                                                 </div>
-                                                <div class="space-y-6 relative">
-                                                    <div class="flex items-center gap-3">
-                                                        <div class="flex items-center justify-center w-7 h-7 rounded-full border-2 bg-white"
-                                                            :class="[
-                                                                getStatusStep(deficiency) >= 1
-                                                                    ? 'border-red-500 text-red-500'
-                                                                    : 'border-gray-300 text-gray-300'
-                                                            ]">
-                                                            <AlertCircle class="w-4 h-4" />
-                                                        </div>
-                                                        <div :class="[
-                                                            'flex flex-col',
-                                                            getStatusStep(deficiency) >= 1 ? 'text-gray-900' : 'text-gray-400'
-                                                        ]">
-                                                            <span class="font-medium">Pending</span>
-                                                            <span class="text-sm">Issue reported</span>
-                                                        </div>
+                                                <div class="flex items-start gap-3">
+                                                    <Calendar class="w-4 h-4 mt-1 text-gray-500" />
+                                                    <div>
+                                                        <span class="text-sm text-gray-500">Action Date</span>
+                                                        <span class="font-medium text-gray-900 block">{{
+                                                            deficiency.action_date }}</span>
                                                     </div>
+                                                </div>
+                                            </div>
 
-                                                    <div class="flex items-center gap-3">
-                                                        <div class="flex items-center justify-center w-7 h-7 rounded-full border-2 bg-white"
-                                                            :class="[
-                                                                getStatusStep(deficiency) >= 2
-                                                                    ? 'border-yellow-500 text-yellow-500'
-                                                                    : 'border-gray-300 text-gray-300'
-                                                            ]">
-                                                            <Clock class="w-4 h-4" />
-                                                        </div>
-                                                        <div :class="[
-                                                            'flex flex-col',
-                                                            getStatusStep(deficiency) >= 2 ? 'text-gray-900' : 'text-gray-400'
-                                                        ]">
-                                                            <span class="font-medium">Seen</span>
-                                                            <span class="text-sm">Under review</span>
-                                                        </div>
+                                            <!-- Response Text -->
+                                            <div class="bg-white p-3 rounded-md mb-6">
+                                                <h5 class="text-sm text-gray-500 mb-2">Response</h5>
+                                                <p class="text-gray-900">
+                                                    {{ deficiency.comment_by_pertaining_officer || 'No response yet' }}
+                                                </p>
+                                            </div>
+
+                                            <!-- Status Timeline (unchanged) -->
+                                            <div class="bg-white p-3 rounded-md mb-6">
+                                                <h5 class="text-sm text-gray-500 mb-2">Status Timeline</h5>
+
+                                                <div class="mt-6 ml-3 relative">
+                                                    <div
+                                                        class="absolute left-[1.3rem] top-2 h-[calc(100%-16px)] w-0.5 bg-gray-200">
                                                     </div>
-
-                                                    <div class="flex items-center gap-3">
-                                                        <div class="flex items-center justify-center w-7 h-7 rounded-full border-2 bg-white"
-                                                            :class="[
-                                                                getStatusStep(deficiency) >= 3
-                                                                    ? 'border-green-500 text-green-500'
-                                                                    : 'border-gray-300 text-gray-300'
+                                                    <div class="space-y-6 relative">
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="flex items-center justify-center w-7 h-7 rounded-full border-2 bg-white"
+                                                                :class="[
+                                                                    getStatusStep(deficiency) >= 1
+                                                                        ? 'border-red-500 text-red-500'
+                                                                        : 'border-gray-300 text-gray-300'
+                                                                ]">
+                                                                <AlertCircle class="w-4 h-4" />
+                                                            </div>
+                                                            <div :class="[
+                                                                'flex flex-col',
+                                                                getStatusStep(deficiency) >= 1 ? 'text-gray-900' : 'text-gray-400'
                                                             ]">
-                                                            <CheckCircle class="w-4 h-4" />
+                                                                <span class="font-medium">Pending</span>
+                                                                <span class="text-sm">Issue reported</span>
+                                                            </div>
                                                         </div>
-                                                        <div :class="[
-                                                            'flex flex-col',
-                                                            getStatusStep(deficiency) >= 3 ? 'text-gray-900' : 'text-gray-400'
-                                                        ]">
-                                                            <span class="font-medium">Attended</span>
-                                                            <span class="text-sm">Issue resolved</span>
+
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="flex items-center justify-center w-7 h-7 rounded-full border-2 bg-white"
+                                                                :class="[
+                                                                    getStatusStep(deficiency) >= 2
+                                                                        ? 'border-yellow-500 text-yellow-500'
+                                                                        : 'border-gray-300 text-gray-300'
+                                                                ]">
+                                                                <Clock class="w-4 h-4" />
+                                                            </div>
+                                                            <div :class="[
+                                                                'flex flex-col',
+                                                                getStatusStep(deficiency) >= 2 ? 'text-gray-900' : 'text-gray-400'
+                                                            ]">
+                                                                <span class="font-medium">Seen</span>
+                                                                <span class="text-sm">Under review</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="flex items-center justify-center w-7 h-7 rounded-full border-2 bg-white"
+                                                                :class="[
+                                                                    getStatusStep(deficiency) >= 3
+                                                                        ? 'border-green-500 text-green-500'
+                                                                        : 'border-gray-300 text-gray-300'
+                                                                ]">
+                                                                <CheckCircle class="w-4 h-4" />
+                                                            </div>
+                                                            <div :class="[
+                                                                'flex flex-col',
+                                                                getStatusStep(deficiency) >= 3 ? 'text-gray-900' : 'text-gray-400'
+                                                            ]">
+                                                                <span class="font-medium">Attended</span>
+                                                                <span class="text-sm">Issue resolved</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
