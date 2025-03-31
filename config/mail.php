@@ -113,4 +113,16 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'markdown' => [
+        'theme' => 'default',
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
+    'logo' => [
+        'path' => public_path('images/logo.svg'),
+        'width' => 100,
+        'height' => 100,
+    ],
 ];

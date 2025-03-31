@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Deficiency\DeficiencyController;
 use App\Http\Controllers\Inspection\InspectionController;
 use Illuminate\Support\Facades\Route;
@@ -16,11 +17,20 @@ Route::get('dashboard', function () {
 
 Route::middleware(['auth'])->group( function () {
 
-    Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
+    // Users
+    Route::get('users', [RegisteredUserController::class,'listUsersForDropdown'])->name('users.list');
+    
+    // Inspections
     Route::get('inspections', [InspectionController::class, 'index'])->name('inspections.index');
-    Route::get('inspections/view', [InspectionController::class, 'view'])->name('inspections.view');
+    Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
+    Route::post('inspections', [InspectionController::class, 'save'])->name('inspections.save');
+    Route::get('inspections/{id}', [InspectionController::class, 'view'])->name('inspections.view');
+    
+    // Deficiencies
+    Route::post('deficiencies/{id}/remind', [DeficiencyController::class, 'remind'])->name('deficiencies.remind');
     Route::get('deficiencies', [DeficiencyController::class, 'index'])->name('deficiencies.index');
-    Route::get('deficiencies/view', [DeficiencyController::class, 'view'])->name('deficiencies.view');
+    Route::get('deficiencies/{id}', [DeficiencyController::class, 'view'])->name('deficiencies.view');
+    Route::post('deficiencies/{id}/attend', [DeficiencyController::class, 'attend'])->name('deficiencies.attend');
     
 });
 

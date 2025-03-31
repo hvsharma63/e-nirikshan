@@ -15,8 +15,8 @@ defineProps<{
 }>();
 
 const form = useForm({
-    pf_no: '50829802940',
-    password: '23061990',
+    pf_no: '',
+    password: '',
     remember: false,
 });
 
@@ -28,7 +28,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="E-Nirakshak" description="Log in to your account">
+    <AuthBase title="E-nirikshan" description="Log in to your account">
 
         <Head title="Log in" />
 
@@ -41,7 +41,7 @@ const submit = () => {
                 <div class="grid gap-2">
                     <Label for="pf_no">PF No / Employee Number</Label>
                     <Input id="pf_no" type="text" required autofocus :tabindex="1" autocomplete="pf_no"
-                        v-model="form.pf_no" />
+                        v-model="form.pf_no" placeholder="PF No / Employee Number" />
                     <InputError :message="form.errors.pf_no" />
                 </div>
 

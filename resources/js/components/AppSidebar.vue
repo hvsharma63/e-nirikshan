@@ -20,11 +20,6 @@ const mainNavItems: NavItem[] = [
         icon: ScrollText,
     },
     {
-        title: 'Diarise Inspections',
-        href: '/inspections/create',
-        icon: NotebookText,
-    },
-    {
         title: 'Received Deficiencies',
         href: '/deficiencies',
         icon: CalendarClock,
