@@ -4,6 +4,7 @@ namespace App\Queries;
 
 use App\Models\Inspection;
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class InspectionQueries {
@@ -16,13 +17,13 @@ class InspectionQueries {
             ->create($inspectionData);
     }
 
-    public function list(int $userId): Collection {
+    public function list(int $userId): LengthAwarePaginator {
         return Inspection::query()
             ->select(['id', 'location', 'datetime', 'day_period', 'status'])
             ->withCount(['deficiencies'])
             ->where('attended_by', $userId)
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(5);
     }
 
     public function get(int $inspectionId, int $userId): ?Inspection {

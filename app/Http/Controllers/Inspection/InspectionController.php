@@ -10,6 +10,7 @@ use App\Queries\InspectionQueries;
 use App\Services\InspectionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -59,5 +60,13 @@ class InspectionController extends Controller
         return Inertia::render('inspection/View', [
             'inspection' => new ViewInspectionResource($inspection),
         ]);
+    }
+
+    public function list(): JsonResource
+    {
+        $inspections = $this->inspectionQueries->list(Auth::id());
+
+        return ListInspectionResource::collection($inspections);
+
     }
 }

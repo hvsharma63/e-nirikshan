@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group( function () {
     
     // Inspections
     Route::get('inspections', [InspectionController::class, 'index'])->name('inspections.index');
+    Route::get('inspections/list', [InspectionController::class, 'list'])->name('inspections.list');
     Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
     Route::post('inspections', [InspectionController::class, 'save'])->name('inspections.save');
     Route::get('inspections/{id}', [InspectionController::class, 'view'])->name('inspections.view');

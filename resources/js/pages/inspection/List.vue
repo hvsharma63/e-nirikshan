@@ -26,6 +26,7 @@ import {
     Timer
 } from 'lucide-vue-next';
 import { onMounted } from 'vue';
+import AppDataTable from '@/components/AppDataTable.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -114,77 +115,16 @@ onMounted(() => {
                 </Link>
             </div>
 
-            <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
-                <Table class="w-full">
-                    <TableCaption v-if="!inspections?.length" class="py-8">
-                        <div class="flex flex-col items-center justify-center space-y-4 text-center">
-                            <p class="text-lg font-medium text-gray-600 dark:text-gray-300">No inspections found</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">When you diarise inspections, they will
-                                appear here.</p>
-                        </div>
-                    </TableCaption>
-
-                    <TableHeader class="hidden bg-gray-50 dark:bg-gray-800/90 md:table-header-group">
-                        <TableRow class="border-b border-gray-200 dark:border-gray-700">
-                            <TableHead
-                                v-for="header in ['Sr. No.', 'Location', 'Total Deficiencies', 'Date', 'Time', 'Period', 'Status', 'Actions']"
-                                :key="header"
-                                class="py-4 px-6 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                                :class="{ 'text-right': header === 'Actions' }">
-                                <div class="flex items-center gap-2" :class="{ 'justify-end': header === 'Actions' }">
-                                    <component :is="getHeaderIcon(header)" class="h-4 w-4 text-gray-500" />
-                                    {{ header }}
-                                </div>
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody v-if="inspections.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <TableRow v-for="inspection in inspections" :key="inspection.id" class="group block transition-colors md:table-row
-                                       hover:bg-gray-50/80 dark:hover:bg-gray-800/80
-                                       md:hover:shadow-sm">
-                            <TableCell v-for="(field, key) in {
-                                id: 'Sr. No.',
-                                location: 'Location',
-                                deficiencies_count: 'Total Deficiencies',
-                                date: 'Date',
-                                time: 'Time',
-                                day_period: 'Period'
-                            }" :key="key" class="flex items-center justify-between p-4 md:table-cell md:py-4 md:px-6">
-                                <span class="flex items-center gap-2 font-medium text-gray-500 md:hidden">
-                                    <component :is="getHeaderIcon(field)" class="h-4 w-4" />
-                                    {{ field }}
-                                </span>
-                                <span :class="getCellTextClass(key)">{{ inspection[key] }}</span>
-                            </TableCell>
-
-                            <TableCell class="flex items-center justify-between p-4 md:table-cell md:py-4 md:px-6">
-                                <span class="flex items-center gap-2 font-medium text-gray-500 md:hidden">
-                                    <Clock class="h-4 w-4" /> Status
-                                </span>
-                                <span
-                                    class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium shadow-sm transition-colors"
-                                    :class="getStatusColor(inspection?.status)">
-                                    <component :is="getStatusIcon(inspection?.status)" class="h-3.5 w-3.5" />
-                                    {{ inspection?.status }}
-                                </span>
-                            </TableCell>
-
-                            <TableCell
-                                class="flex items-center justify-between p-4 md:table-cell md:py-4 md:px-6 md:text-right">
-                                <span class="flex items-center gap-2 font-medium text-gray-500 md:hidden">
-                                    <Eye class="h-4 w-4" /> Actions
-                                </span>
-                                <Link :href="`/inspections/${inspection.id}`"
-                                    class="inline-flex items-center justify-center gap-2 rounded-md bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <Eye class="h-4 w-4" />
-                                <span class="md:hidden">View Details</span>
-                                </Link>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </div>
+            <AppDataTable apiUrl="/inspections/list" :columns="[
+                { accessorKey: 'id', header: 'ID' },
+                { accessorKey: 'location', header: 'Location' },
+                { accessorKey: 'deficiencies_count', header: 'Total Deficiencies' },
+                { accessorKey: 'date', header: 'Date' },
+                { accessorKey: 'time', header: 'Time' },
+                { accessorKey: 'day_period', header: 'Period' },
+                { accessorKey: 'status', header: 'Status' },
+            ]">
+            </AppDataTable>
         </div>
     </AppLayout>
 </template>
