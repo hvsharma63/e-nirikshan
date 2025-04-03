@@ -1,18 +1,30 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import apiService from '@/services/apiService';
-import { useVueTable, getCoreRowModel, FlexRender } from '@tanstack/vue-table';
+import { useVueTable, getCoreRowModel, type ColumnDef } from '@tanstack/vue-table';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-vue-next';
+import AppPagination from './AppPagination.vue';
 
 const props = defineProps({
     apiUrl: String,
-    columns: Array,
+    columns: Array as () => ColumnDef<any, any>[],
     filters: Object,
+    emptyMessage: {
+        type: String,
+        default: 'No results found.'
+    },
+    emptyDescription: {
+        type: String,
+        default: 'Try adjusting your search or filters to find what you\'re looking for.'
+    },
+    shouldSearch: {
+        type: Boolean,
+        default: false
+    }
 });
-
 const emit = defineEmits(['edit', 'delete']);
 
 // Simplified state management
@@ -29,33 +41,20 @@ const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// Modify pagination handlers
-const handlePreviousPage = async () => {
-    pagination.value.pageIndex -= 1;
-    await fetchData();
-    scrollToTop();
-};
-
-const handleNextPage = async () => {
-    pagination.value.pageIndex += 1;
-    await fetchData();
-    scrollToTop();
-};
-
 const table = useVueTable({
     getCoreRowModel: getCoreRowModel(),
     data,
-    columns: [...props.columns, { accessorKey: 'actions', header: 'Actions' }],
+    columns: [...(props.columns || []), { accessorKey: 'actions', header: 'Actions' }],
     state: { pagination: pagination.value },
     manualPagination: true,
-    pageCount: pageCount,
+    pageCount: pageCount.value,
 });
 
 // Simplified fetch function
 const fetchData = async () => {
     isLoading.value = true;
     try {
-        const response = await apiService.get(props.apiUrl, {
+        const response = await apiService.get(props.apiUrl || '', {
             params: {
                 page: pagination.value.pageIndex + 1,
                 per_page: pagination.value.pageSize,
@@ -63,7 +62,6 @@ const fetchData = async () => {
                 ...extraFilters.value,
             },
         });
-
         const { data: rows, meta } = response.data?.data ? response.data : { data: response.data, meta: response.meta || {} };
         data.value = rows;
         total.value = meta.total || rows.length;
@@ -88,12 +86,17 @@ window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 768;
 });
 
+const goToPage = (page: number) => {
+    pagination.value.pageIndex = page - 1;
+    fetchData();
+    scrollToTop();
+};
 </script>
 
 <template>
     <div class="w-full space-y-4">
         <!-- Search and filters section -->
-        <div class="flex flex-col sm:flex-row gap-3">
+        <div class="flex flex-col sm:flex-row gap-3" v-if="props.shouldSearch">
             <div class="w-full sm:max-w-md relative">
                 <Input v-model="searchQuery" placeholder="Search..."
                     class="w-full pl-9 bg-white/50 dark:bg-gray-800/50" />
@@ -132,9 +135,15 @@ window.addEventListener('resize', () => {
 
                 <TableBody class="divide-y divide-gray-200 dark:divide-gray-700 md:divide-y-0">
                     <TableRow v-if="!data.length && !isLoading">
-                        <TableCell :colspan="table.getFlatHeaders().length"
-                            class="h-24 text-center text-gray-500 dark:text-gray-400">
-                            No results found.
+                        <TableCell :colspan="table.getFlatHeaders().length" class="h-32 text-center">
+                            <div class="flex flex-col items-center justify-center gap-2">
+                                <p class="text-lg font-semibold text-gray-900 dark:text-white">
+                                    {{ props.emptyMessage }}
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ props.emptyDescription }}
+                                </p>
+                            </div>
                         </TableCell>
                     </TableRow>
                     <TableRow v-for="row in table.getRowModel().rows" :key="row.id"
@@ -149,7 +158,12 @@ window.addEventListener('resize', () => {
                             <span
                                 class="text-[15px] leading-normal md:text-sm text-gray-900 dark:text-white 
                                         text-right md:text-left flex-shrink-0 md:flex-shrink max-w-[60%] md:max-w-none">
-                                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                                <template v-if="cell.column.id === 'actions'">
+                                    <slot name="actions" :row="row.original"></slot>
+                                </template>
+                                <template v-else>
+                                    {{ cell.getValue() }}
+                                </template>
                             </span>
                         </TableCell>
                     </TableRow>
@@ -157,28 +171,8 @@ window.addEventListener('resize', () => {
             </Table>
         </div>
 
-        <!-- Pagination section -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
-            <div class="w-full sm:w-auto text-sm text-center sm:text-left text-gray-700 dark:text-gray-300">
-                Showing {{ pagination.pageIndex * pagination.pageSize + 1 }}
-                to
-                {{ Math.min((pagination.pageIndex + 1) * pagination.pageSize, total) }}
-                of {{ total }} results
-            </div>
-            <div class="flex items-center justify-between w-full sm:w-auto gap-2">
-                <Button variant="outline" size="sm" :disabled="pagination.pageIndex === 0" @click="handlePreviousPage"
-                    class="w-full sm:w-auto">
-                    Previous
-                </Button>
-                <span class="text-sm text-gray-600 dark:text-gray-400">
-                    Page {{ pagination.pageIndex + 1 }} of {{ pageCount }}
-                </span>
-                <Button variant="outline" size="sm" :disabled="pagination.pageIndex >= pageCount - 1"
-                    @click="handleNextPage" class="w-full sm:w-auto">
-                    Next
-                </Button>
-            </div>
-        </div>
+        <AppPagination :totalItems="total" :currentPage="pagination.pageIndex + 1" :itemsPerPage="pagination.pageSize"
+            @update:currentPage="goToPage" />
     </div>
 </template>
 

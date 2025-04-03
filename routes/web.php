@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group( function () {
     // Deficiencies
     Route::post('deficiencies/{id}/remind', [DeficiencyController::class, 'remind'])->name('deficiencies.remind');
     Route::get('deficiencies', [DeficiencyController::class, 'index'])->name('deficiencies.index');
+    Route::get('deficiencies/list', [DeficiencyController::class, 'list'])->name('deficiencies.list');
     Route::get('deficiencies/{id}', [DeficiencyController::class, 'view'])->name('deficiencies.view');
     Route::post('deficiencies/{id}/attend', [DeficiencyController::class, 'attend'])->name('deficiencies.attend');
     

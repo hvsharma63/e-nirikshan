@@ -7,11 +7,11 @@ use App\Http\Requests\Deficiency\AttendDeficiencyRequest;
 use App\Http\Resources\Deficiency\ListDeficiencyResource;
 use App\Http\Resources\ViewDeficiencyResource;
 use App\Jobs\SendDeficiencyNotificationJob;
-use App\Notifications\DeficiencyNotification;
-use App\Notifications\DeficiencyReportedNotification;
 use App\Queries\DeficiencyQueries;
 use App\Services\DeficiencyService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -28,11 +28,7 @@ class DeficiencyController extends Controller
     
     public function index(): Response
     {
-        $deficiencies = $this->deficiencyQueries->list(Auth::id());
-
-        return Inertia::render('deficiencies/List',[
-            'deficiencies' => ListDeficiencyResource::collection($deficiencies),
-        ]);
+        return Inertia::render('deficiencies/List');
     }
 
     public function view(int $id): Response
@@ -70,5 +66,10 @@ class DeficiencyController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function list(Request $request): AnonymousResourceCollection {
+        $deficiencies = $this->deficiencyQueries->list(Auth::id());
+        return ListDeficiencyResource::collection($deficiencies);
     }
 }

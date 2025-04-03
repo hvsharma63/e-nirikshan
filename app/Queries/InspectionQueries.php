@@ -3,9 +3,7 @@
 namespace App\Queries;
 
 use App\Models\Inspection;
-use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class InspectionQueries {
 

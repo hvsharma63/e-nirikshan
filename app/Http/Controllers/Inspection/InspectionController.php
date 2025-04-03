@@ -10,7 +10,8 @@ use App\Queries\InspectionQueries;
 use App\Services\InspectionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -47,10 +48,7 @@ class InspectionController extends Controller
 
     public function index(): Response
     {
-        $inspections = $this->inspectionQueries->list(Auth::id());
-        return Inertia::render('inspection/List', [
-            'inspections' => ListInspectionResource::collection($inspections),
-        ]);
+        return Inertia::render('inspection/List');
     }
 
     public function view(int $id): Response
@@ -62,11 +60,11 @@ class InspectionController extends Controller
         ]);
     }
 
-    public function list(): JsonResource
+    public function list(Request $request): AnonymousResourceCollection
     {
+        
         $inspections = $this->inspectionQueries->list(Auth::id());
 
         return ListInspectionResource::collection($inspections);
-
     }
 }
