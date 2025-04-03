@@ -8,7 +8,7 @@ import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle, NotebookIcon } from 'lucide-vue-next';
 import Card from '@/components/ui/card/Card.vue';
-import { CalendarIcon, MapPinIcon, UserIcon, ClockIcon } from 'lucide-vue-next';
+import { CalendarIcon, MapPinIcon, UserIcon } from 'lucide-vue-next';
 import { PlusCircleIcon, TrashIcon } from 'lucide-vue-next';
 import { ref, onMounted } from 'vue';
 import apiService from '@/services/apiService';

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 import AppLayout from '@/layouts/AppLayout.vue';
-import { SharedData, type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { type BreadcrumbItem } from '@/types';
+import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { Calendar, Eye, LocateFixed, UserRound, CheckCircle2, Clock, AlertCircle, Hash } from 'lucide-vue-next';
+import { Eye } from 'lucide-vue-next';
 import AppDataTable from '@/components/AppDataTable.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -13,8 +13,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/deficiencies',
     },
 ];
-
-const page = usePage<SharedData>();
 
 const columns = [
     { accessorKey: 'id', header: 'ID' },
@@ -48,7 +46,7 @@ window.addEventListener('resize', () => {
                 <AppDataTable apiUrl="/deficiencies/list" :columns="columns" empty-message="No deficiencies found"
                     empty-description="If deficiencies get assigned to you, they will appear here.">
                     <template #actions="{ row }">
-                        <Link :href="`/inspections/${row.id}`"
+                        <Link :href="`/deficiencies/${row.id}`"
                             class="inline-flex items-center gap-2 text-primary hover:text-primary/80">
                         <Eye class="h-4 w-4" />
                         View

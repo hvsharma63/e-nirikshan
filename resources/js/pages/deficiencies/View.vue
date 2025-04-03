@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { AlertCircle, CheckCircle, Clock, MapPin, User, Building, Calendar, FileText, AlertTriangle, MessageSquare, CheckCircle2, CalendarCheck } from 'lucide-vue-next';
+import { AlertCircle, CheckCircle, Clock, MapPin, User, Calendar, FileText, AlertTriangle, MessageSquare, CalendarCheck } from 'lucide-vue-next';
 import { SharedData, ViewDeficiency } from '@/types';
 import { onMounted } from 'vue';
 import InputError from '@/components/InputError.vue';

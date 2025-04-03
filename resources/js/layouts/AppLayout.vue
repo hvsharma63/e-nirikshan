@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AppGlobalToastr from '@/components/AppGlobalToastr.vue';
-import { Toaster } from '@/components/ui/toast';
 import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { BreadcrumbItemType } from '@/types';
 import AppFooterLayout from './app/AppFooterLayout.vue';
@@ -18,7 +17,6 @@ withDefaults(defineProps<Props>(), {
     <AppLayout :breadcrumbs="breadcrumbs">
         <slot />
         <AppGlobalToastr />
-        <Toaster />
         <AppFooterLayout />
     </AppLayout>
 </template>

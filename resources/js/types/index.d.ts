@@ -119,7 +119,7 @@ export interface ViewDeficiency {
     inspection_id: number;
     location: string;
     address: string;
-    attended_by: string;
+    attended_by: ItemDeficiencyPertainsTo;
     datetime: string;
     inspection_note: string;
     deficiency_note: string;

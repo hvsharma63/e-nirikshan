@@ -2,6 +2,7 @@
 import { usePage } from '@inertiajs/vue3';
 import { watch } from 'vue';
 import { useToast } from './ui/toast';
+import Toaster from './ui/toast/Toaster.vue';
 
 const { toast } = useToast();
 const page = usePage<{ flash: { success?: string; warning?: string; error?: string } }>();
@@ -33,5 +34,5 @@ watch(
 </script>
 
 <template>
-    <!-- Component renders nothing visually -->
+    <Toaster />
 </template>

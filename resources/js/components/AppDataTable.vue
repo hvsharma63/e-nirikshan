@@ -25,7 +25,6 @@ const props = defineProps({
         default: false
     }
 });
-const emit = defineEmits(['edit', 'delete']);
 
 // Simplified state management
 const data = ref([]);
