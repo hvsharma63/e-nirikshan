@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -74,6 +74,14 @@ const getStatusStep = (deficiency: ItemDeficiency) => {
 const checkIsMobile = () => window.innerWidth < 768;
 const isMobile = ref(checkIsMobile());
 
+const viewNote = () => {
+    window.open(route('inspections.view-note', inspection.id), '_blank');
+};
+
+const downloadNote = () => {
+    window.open(route('inspections.download-note', inspection.id), '_blank');
+};
+
 onMounted(() => {
     window.addEventListener('resize', () => {
         isMobile.value = checkIsMobile();
@@ -125,12 +133,6 @@ onMounted(() => {
                         <div class="space-y-4">
                             <div class="flex flex-col">
                                 <span class="text-sm text-gray-500 flex items-center gap-2">
-                                    <Building2 class="w-4 h-4" />Address
-                                </span>
-                                <span class="text-lg">{{ inspection.address }}</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm text-gray-500 flex items-center gap-2">
                                     <User class="w-4 h-4" />Attended By
                                 </span>
                                 <span class="text-lg">{{ inspection.attended_by }}</span>
@@ -138,14 +140,15 @@ onMounted(() => {
                         </div>
                     </div>
 
-                    <!-- Inspector's Notes - Full Width -->
-                    <div class="mt-8">
-                        <div class="flex flex-col">
-                            <span class="text-sm text-gray-500 flex items-center gap-2">
-                                <ClipboardList class="w-4 h-4" />Inspector's Notes or Observations
-                            </span>
-                            <span class="text-lg mt-1">{{ inspection.note }}</span>
-                        </div>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-end gap-2">
+                        <Button @click="viewNote" class="inline-flex items-center justify-center px-4 py-2 text-sm">
+                            <ClipboardList class="w-4 h-4 mr-2" />
+                            View Inspection Note
+                        </Button>
+                        <Button @click="downloadNote" class="inline-flex items-center justify-center px-4 py-2 text-sm">
+                            <ClipboardList class="w-4 h-4 mr-2" />
+                            Download Inspection Note
+                        </Button>
                     </div>
                 </section>
             </Card>
@@ -154,7 +157,7 @@ onMounted(() => {
             <Card class="shadow-md">
                 <section class="p-4 sm:p-8 bg-white rounded">
                     <div class="flex flex-col sm:flex-row justify-between mb-6 gap-2">
-                        <h2 class="text-xl sm:text-2xl font-bold">Deficiencies</h2>
+                        <h2 class="text-xl sm:text-2xl font-bold">Deficiencies / Observations / Abnormalities</h2>
                         <span class="px-3 py-1 bg-gray-100 rounded-full text-sm w-fit">
                             {{ inspection.deficiencies.length }} found
                         </span>

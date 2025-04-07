@@ -26,12 +26,16 @@ Route::middleware(['auth'])->group( function () {
     Route::get('inspections/create', [InspectionController::class, 'create'])->name('inspections.create');
     Route::post('inspections', [InspectionController::class, 'save'])->name('inspections.save');
     Route::get('inspections/{id}', [InspectionController::class, 'view'])->name('inspections.view');
+    Route::get('inspections/{id}/view-note', [InspectionController::class, 'viewNote'])->name('inspections.view-note');
+    Route::get('inspections/{id}/download-note', [InspectionController::class, 'downloadNote'])->name('inspections.download-note');
     
     // Deficiencies
     Route::post('deficiencies/{id}/remind', [DeficiencyController::class, 'remind'])->name('deficiencies.remind');
     Route::get('deficiencies', [DeficiencyController::class, 'index'])->name('deficiencies.index');
     Route::get('deficiencies/list', [DeficiencyController::class, 'list'])->name('deficiencies.list');
     Route::get('deficiencies/{id}', [DeficiencyController::class, 'view'])->name('deficiencies.view');
+    Route::get('deficiencies/{id}/view-note', [DeficiencyController::class, 'viewNote'])->name('deficiencies.view-note');
+    Route::get('deficiencies/{id}/download-note', [DeficiencyController::class, 'downloadNote'])->name('deficiencies.download-note');
     Route::post('deficiencies/{id}/attend', [DeficiencyController::class, 'attend'])->name('deficiencies.attend');
     
 });

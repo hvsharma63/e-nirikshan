@@ -32,7 +32,7 @@ const total = ref(0);
 const searchQuery = ref('');
 const isLoading = ref(false);
 const pageCount = ref(0);
-const pagination = ref({ pageIndex: 0, pageSize: 5 });
+const pagination = ref({ pageIndex: 0, pageSize: 10 });
 const extraFilters = ref(props.filters || {});
 
 // Add scroll handler

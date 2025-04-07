@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Inspection\InspectionCreateRequest;
 use App\Http\Resources\Inspection\ListInspectionResource;
 use App\Http\Resources\ViewInspectionResource;
+use App\Models\Inspection;
 use App\Queries\InspectionQueries;
 use App\Services\InspectionService;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\LaravelPdf\PdfBuilder;
+
+use function Spatie\LaravelPdf\Support\pdf;
 
 class InspectionController extends Controller
 {
@@ -66,5 +70,27 @@ class InspectionController extends Controller
         $inspections = $this->inspectionQueries->list(Auth::id());
 
         return ListInspectionResource::collection($inspections);
+    }
+
+    private function getNote(int $id): ?Inspection {
+        return $this->inspectionQueries->viewNotePdfByInspectingOfficer($id, Auth::id());
+    }
+    
+    public function viewNote(int $id): PdfBuilder
+    {
+        $inspection = $this->getNote($id);
+
+        return pdf()
+            ->view('pdf.note', ['inspection' => $inspection])
+            ->name('inspection-note.pdf');
+    }
+
+    public function downloadNote(int $id): PdfBuilder
+    {
+        $inspection = $this->getNote($id);
+
+        return pdf()
+            ->view('pdf.note', ['inspection' => $inspection])
+            ->download('inspection-note-' . now()->format('Y-m-d_H-i-s') . '.pdf');
     }
 }

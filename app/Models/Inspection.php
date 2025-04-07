@@ -12,10 +12,8 @@ class Inspection extends Model
 {
     protected $fillable = [
         'location',
-        'address',
         'attended_by',
         'datetime',
-        'note',
         'day_period',
         'no_deficiencies_found',
         'status',

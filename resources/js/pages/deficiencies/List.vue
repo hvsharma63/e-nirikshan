@@ -17,7 +17,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 const columns = [
     { accessorKey: 'id', header: 'ID' },
     { accessorKey: 'location', header: 'Location' },
-    { accessorKey: 'note', header: 'Note' },
     { accessorKey: 'action_date', header: 'Action Date' },
     { accessorKey: 'attended_by', header: 'Attended By' },
     { accessorKey: 'date', header: 'Date' },
