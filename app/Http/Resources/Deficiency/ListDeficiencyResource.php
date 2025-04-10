@@ -6,7 +6,7 @@ use App\Enums\DeficiencyStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Str;
+use Illuminate\Support\Str;
 
 class ListDeficiencyResource extends JsonResource
 {
@@ -21,7 +21,7 @@ class ListDeficiencyResource extends JsonResource
             'id' => $this->id,
             'location' => $this->inspection->location,
             'note' => Str::limit($this->note, 50),
-            'action_date' => $this->action_date ? Carbon::parse($this->action_date)->format('d M Y') : null,
+            'action_date' => $this->action_date ? Carbon::parse($this->action_date)->format('d M Y') : '-',
             'attended_by' => $this->inspection->attendedBy->name,
             'date' => Carbon::parse($this->inspection->datetime)->format('d M Y'),
             'time' => Carbon::parse($this->inspection->datetime)->format('H:i A'),

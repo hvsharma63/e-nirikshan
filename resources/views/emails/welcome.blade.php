@@ -3,11 +3,11 @@
     <img src="{{ config('app.url') }}/images/logo.svg" alt="{{ config('app.name') }}" style="width: 100px; height: auto;">
 </div>
 
-# Welcome to E-Nirikshan!
+# Welcome to Ghaat-Nirikshan!
 
 Hello {{ $user->name }},
 
-Your account has been successfully created on the E-Nirikshan Inspection Portal. You can login using the following credentials:
+Your account has been successfully created on the Ghaat-Nirikshan Inspection Portal. You can login using the following credentials:
 
 **Username:** {{ $user->pf_no }} <br>
 **Initial Password:** Your date of birth in DDMMYYYY format (e.g., for 19/11/1997, use 19111997)

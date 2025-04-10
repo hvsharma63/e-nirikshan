@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\InspectionStatusEnum;
 use App\Jobs\SendDeficiencyNotificationJob;
 use App\Queries\InspectionQueries;
 
@@ -16,7 +17,11 @@ class InspectionService {
         $deficiencies = $inspectionData["deficiencies"];
 
         unset($inspectionData["is_draft"], $inspectionData["deficiencies"]);
-        
+
+        if($inspectionData['no_deficiencies_found']) {
+            $inspectionData['status'] = InspectionStatusEnum::COMPLETED();
+        }
+
         $inspection = $this->inspectionQueries->create($inspectionData);
 
         if (!empty($deficiencies)) {

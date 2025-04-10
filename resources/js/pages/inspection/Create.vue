@@ -8,7 +8,7 @@ import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle, NotebookIcon } from 'lucide-vue-next';
 import Card from '@/components/ui/card/Card.vue';
-import { CalendarIcon, MapPinIcon, UserIcon, ClockIcon } from 'lucide-vue-next';
+import { CalendarIcon, MapPinIcon, UserIcon } from 'lucide-vue-next';
 import { PlusCircleIcon, TrashIcon } from 'lucide-vue-next';
 import { ref, onMounted } from 'vue';
 import apiService from '@/services/apiService';
@@ -32,8 +32,6 @@ const user = page.props.auth.user as User;
 const form = useForm({
     location: '',
     datetime: '',
-    address: '',
-    note: '',
     is_draft: false as boolean,
     attended_by: user.name,
     attended_by_id: user.id,
@@ -112,43 +110,9 @@ onMounted(() => {
                                 <InputError :message="form.errors.datetime" />
                             </div>
 
-                            <div class="space-y-2">
-                                <Label for="attended_by">Attended By</Label>
-                                <div class="flex items-center gap-2">
-                                    <UserIcon class="h-5 w-5 text-muted-foreground" />
-                                    <Input id="attended_by" type="text" required :tabindex="3"
-                                        placeholder="Enter attendee name" v-model="form.attended_by" disabled />
-                                </div>
-                                <InputError :message="form.errors.attended_by" />
-                            </div>
-
-                            <div class="sm:col-span-2 space-y-2">
-                                <Label for="address">Address</Label>
-                                <div class="flex items-center gap-2">
-                                    <MapPinIcon class="h-5 w-5 text-muted-foreground" />
-                                    <textarea id="address" type="text" required :tabindex="5"
-                                        class="w-full h-14 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                                        placeholder="Enter complete address" v-model="form.address">
-                                </textarea>
-                                </div>
-                                <InputError :message="form.errors.address" />
-                            </div>
-
-                            <div class="sm:col-span-2 space-y-2">
-                                <Label for="note">Notes</Label>
-                                <div class="flex items-center gap-2">
-                                    <NotebookIcon class="h-5 w-5 text-muted-foreground" />
-                                    <textarea id="note" type="text" required :tabindex="5"
-                                        class="w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                                        placeholder="Enter your observations" v-model="form.note">
-                                </textarea>
-                                </div>
-                                <InputError :message="form.errors.note" />
-                            </div>
-
                             <!-- Modified Deficiencies Section -->
                             <div class="sm:col-span-2 mt-4">
-                                <h3 class="text-xl font-semibold mb-2">Deficiencies</h3>
+                                <h3 class="text-xl font-semibold mb-2">Deficiencies / Observations / Abnormalities</h3>
                                 <div v-show="!form.no_deficiencies_found">
                                     <div v-for="(deficiency, index) in form.deficiencies" :key="index"
                                         class="mb-4 p-4 border rounded-md">

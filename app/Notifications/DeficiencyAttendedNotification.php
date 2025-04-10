@@ -29,7 +29,7 @@ class DeficiencyAttendedNotification extends Notification
         return (new MailMessage)
             ->subject('Deficiency Attended')
             ->action('View Deficiency', url('/deficiencies/' . $this->deficiency->id))
-            ->line('Thank you for using E-Nirakshak!');
+            ->line('Thank you for using Ghaat-Nirikshan!');
     }
 
     public function toArray(object $notifiable): array

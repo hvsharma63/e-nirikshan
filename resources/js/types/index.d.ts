@@ -103,10 +103,8 @@ export interface ItemDeficiencyPertainsTo {
 export interface ViewInspection {
     id: number;
     location: string;
-    address: string;
     attended_by: ItemDeficiencyPertainsTo;
     datetime: string;
-    note: string;
     day_period: string;
     no_deficiencies_found: boolean;
     status: string;
@@ -118,10 +116,8 @@ export interface ViewDeficiency {
     id: number;
     inspection_id: number;
     location: string;
-    address: string;
-    attended_by: string;
+    attended_by: ItemDeficiencyPertainsTo;
     datetime: string;
-    inspection_note: string;
     deficiency_note: string;
     day_period: string;
     inspection_status: string;

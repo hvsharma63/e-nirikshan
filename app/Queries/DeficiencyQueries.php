@@ -5,21 +5,21 @@ namespace App\Queries;
 use App\Enums\DeficiencyStatusEnum;
 use App\Models\Deficiency;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class DeficiencyQueries {
 
     public function __construct() {
     }
 
-    public function list(int $userId): Collection {
+    public function list(int $userId): LengthAwarePaginator {
         return Deficiency::query()
             ->withOnly(['inspection:id,location,attended_by,datetime','inspection.attendedBy:id,name'])
-            ->select(['id', 'inspection_id', 'note', 'action_date', 'status'])
+            ->select(['id', 'inspection_id', 'action_date', 'status'])
             ->where('pertains_to', $userId)
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10);
     }
 
     public function get(int $deficiencyId): ?Deficiency {
@@ -31,7 +31,7 @@ class DeficiencyQueries {
     public function view(int $deficiencyId, int $userId): ?Deficiency {
         return Deficiency::query()
             ->withOnly([
-                'inspection:id,location,address,attended_by,datetime,note,day_period,status',
+                'inspection:id,location,attended_by,datetime,day_period,status',
                 'inspection.attendedBy:id,name,designation',
                 'comment:id,deficiency_id,comment_by,comment'
             ])

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toastSuccess, toastError } from './toasterService';
+import { toastError } from './toasterService';
 
 export default {
     // GET request

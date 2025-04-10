@@ -16,9 +16,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
-import type { BreadcrumbItem, NavItem } from '@/types';
+import type { BreadcrumbItem, NavItem, SharedData, User } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, CalendarClock, Folder, LayoutGrid, Menu, NotebookText, Search, ScrollText } from 'lucide-vue-next';
+import { BookOpen, CalendarClock, LayoutGrid, Menu, Search, ScrollText } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -29,8 +29,8 @@ const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
-const page = usePage();
-const auth = computed(() => page.props.auth);
+const page = usePage<SharedData>();
+const user = page.props.auth.user as User;
 
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
@@ -60,7 +60,7 @@ const mainNavItems: NavItem[] = [
 const rightNavItems: NavItem[] = [
     {
         title: 'Documentation',
-        href: 'https://pine-swift-34e.notion.site/E-Nirakshak-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
+        href: 'https://pine-swift-34e.notion.site/Ghaat-Nirikshan-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
         icon: BookOpen,
     },
 ];
@@ -164,17 +164,16 @@ const rightNavItems: NavItem[] = [
                             <Button variant="ghost" size="icon"
                                 class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary">
                                 <Avatar class="size-8 overflow-hidden rounded-full">
-                                    <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar"
-                                        :alt="auth.user.name" />
+                                    <AvatarImage v-if="user.avatar" :src="user.avatar" :alt="user.name" />
                                     <AvatarFallback
                                         class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white">
-                                        {{ getInitials(auth.user?.name) }}
+                                        {{ getInitials(user?.name) }}
                                     </AvatarFallback>
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
+                            <UserMenuContent :user="user" />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

@@ -21,10 +21,8 @@ class ViewInspectionResource extends JsonResource
         return [
             'id' => $this->id,
             'location' => $this->location,
-            'address' => $this->address,
             'attended_by' => $this->attendedBy->name,
             'datetime' => Carbon::parse($this->datetime)->format('d M Y H:i A'),
-            'note' => $this->note,
             'day_period' => InspectionDayPeriodEnum::fromValue($this->day_period)->description,
             'no_deficiencies_found' => $this->no_deficiencies_found,
             'status' => InspectionStatusEnum::fromValue($this->status)->description,

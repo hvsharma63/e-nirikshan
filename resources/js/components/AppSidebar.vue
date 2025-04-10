@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, CalendarClock, Folder, LayoutGrid, NotebookText, ScrollText } from 'lucide-vue-next';
+import { BookOpen, CalendarClock, LayoutGrid, ScrollText } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -29,7 +29,7 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Documentation',
-        href: 'https://pine-swift-34e.notion.site/E-Nirakshak-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
+        href: 'https://pine-swift-34e.notion.site/Ghaat-Nirikshan-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
         icon: BookOpen,
     },
 ];

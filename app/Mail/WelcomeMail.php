@@ -23,7 +23,7 @@ class WelcomeMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Welcome to E-Nirikshan Inspection Portal')
+        return $this->subject('Welcome to Ghaat-Nirikshan Inspection Portal')
                     ->markdown('emails.welcome', [
                         'user' => $this->user
                     ]);
@@ -35,7 +35,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to E-Nirikshan Inspection Portal',
+            subject: 'Welcome to Ghaat-Nirikshan Inspection Portal',
         );
     }
 

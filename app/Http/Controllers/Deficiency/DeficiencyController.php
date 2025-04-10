@@ -7,32 +7,34 @@ use App\Http\Requests\Deficiency\AttendDeficiencyRequest;
 use App\Http\Resources\Deficiency\ListDeficiencyResource;
 use App\Http\Resources\ViewDeficiencyResource;
 use App\Jobs\SendDeficiencyNotificationJob;
-use App\Notifications\DeficiencyNotification;
-use App\Notifications\DeficiencyReportedNotification;
+use App\Models\Inspection;
 use App\Queries\DeficiencyQueries;
+use App\Queries\InspectionQueries;
 use App\Services\DeficiencyService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\LaravelPdf\PdfBuilder;
+
+use function Spatie\LaravelPdf\Support\pdf;
 
 class DeficiencyController extends Controller
 {
     public function __construct(
         private DeficiencyQueries $deficiencyQueries,
+        private InspectionQueries $inspectionQueries,
         private DeficiencyService $deficiencyService
     ) {
     }
     
     public function index(): Response
     {
-        $deficiencies = $this->deficiencyQueries->list(Auth::id());
-
-        return Inertia::render('deficiencies/List',[
-            'deficiencies' => ListDeficiencyResource::collection($deficiencies),
-        ]);
+        return Inertia::render('deficiencies/List');
     }
 
     public function view(int $id): Response
@@ -70,5 +72,33 @@ class DeficiencyController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function list(Request $request): AnonymousResourceCollection {
+        $deficiencies = $this->deficiencyQueries->list(Auth::id());
+        return ListDeficiencyResource::collection($deficiencies);
+    }
+
+
+    private function getNote(int $id): ?Inspection {
+        return $this->inspectionQueries->viewNoteByPertainingOfficer($id, Auth::id());
+    }
+    
+    public function viewNote(int $id): PdfBuilder
+    {
+        $inspection = $this->getNote($id);
+
+        return pdf()
+            ->view('pdf.note', ['inspection' => $inspection])
+            ->name('inspection-note.pdf');
+    }
+
+    public function downloadNote(int $id): PdfBuilder
+    {
+        $inspection = $this->getNote($id);
+
+        return pdf()
+            ->view('pdf.note', ['inspection' => $inspection])
+            ->download('inspection-note-' . now()->format('Y-m-d_H-i-s') . '.pdf');
     }
 }

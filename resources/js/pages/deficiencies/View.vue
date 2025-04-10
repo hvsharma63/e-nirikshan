@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { AlertCircle, CheckCircle, Clock, MapPin, User, Building, Calendar, FileText, AlertTriangle, MessageSquare, CheckCircle2, CalendarCheck } from 'lucide-vue-next';
+import { AlertCircle, CheckCircle, Clock, MapPin, User, Calendar, FileText, AlertTriangle, MessageSquare, CalendarCheck, ClipboardList } from 'lucide-vue-next';
 import { SharedData, ViewDeficiency } from '@/types';
 import { onMounted } from 'vue';
 import InputError from '@/components/InputError.vue';
 
 const breadcrumbs = [
-    { title: 'My Deficiencies', href: '/deficiencies' },
-    { title: 'My Deficiencies', href: '/deficiencies' },
+    { title: 'Received Deficiencies', href: '/deficiencies' },
+    { title: 'Deficiency Details', href: '/deficiencies' },
 ];
 
 const page = usePage<SharedData>();
@@ -64,6 +64,14 @@ onMounted(() => {
     console.log(deficiency);
 });
 
+const viewNote = () => {
+    window.open(route('deficiencies.view-note', deficiency.inspection_id), '_blank');
+};
+
+const downloadNote = () => {
+    window.open(route('deficiencies.download-note', deficiency.inspection_id), '_blank');
+};
+
 </script>
 
 <template>
@@ -80,7 +88,6 @@ onMounted(() => {
                                 :class="['w-6 h-6 mt-1 sm:mt-0 flex-shrink-0', getStatusColor(deficiency)]" />
                             <div>
                                 <h1 class="text-xl font-semibold">{{ deficiency.location }}</h1>
-                                <p class="text-sm text-gray-500 mt-1">{{ deficiency.address }}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
@@ -124,27 +131,20 @@ onMounted(() => {
                                     <div>
                                         <span class="text-sm text-gray-500">Location</span>
                                         <p class="font-medium">{{ deficiency.location }}</p>
-                                        <p class="text-sm text-gray-500">{{ deficiency.address }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Notes Section -->
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border shadow-sm">
-                            <h4 class="font-medium text-gray-900 mb-3 pb-2 border-b flex items-center gap-2">
-                                <FileText class="w-4 h-4" /> Inspection Notes
-                            </h4>
-                            <p class="text-gray-700">{{ deficiency.inspection_note }}</p>
-                        </div>
-
-                        <div class="bg-white p-4 rounded-lg border-l-4 border border-yellow-400 shadow-sm">
-                            <h4 class="font-medium text-gray-900 mb-3 pb-2 border-b flex items-center gap-2">
-                                <AlertTriangle class="w-4 h-4 text-yellow-500" /> Deficiency Notes
-                            </h4>
-                            <p class="text-gray-700">{{ deficiency.deficiency_note }}</p>
+                        <div class="mt-8 flex flex-col sm:flex-row justify-end gap-2">
+                            <Button @click="viewNote" class="inline-flex items-center justify-center px-4 py-2 text-sm">
+                                <ClipboardList class="w-4 h-4 mr-2" />
+                                View Inspection Note
+                            </Button>
+                            <Button @click="downloadNote"
+                                class="inline-flex items-center justify-center px-4 py-2 text-sm">
+                                <ClipboardList class="w-4 h-4 mr-2" />
+                                Download Inspection Note
+                            </Button>
                         </div>
                     </div>
 

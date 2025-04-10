@@ -28,8 +28,6 @@ class InspectionCreateRequest extends FormRequest
         return [
             'location' => ['required', 'string'],
             'datetime' => ['required', 'date'],
-            'address' => ['required', 'string', 'max:255'],
-            'note' => ['required', 'string', 'max:500'],
             'is_draft' => ['required', 'boolean'],
             'no_deficiencies_found' => ['required', 'boolean'],
             'deficiencies' => ['required_if:no_deficiencies_found,false', 'array'],
