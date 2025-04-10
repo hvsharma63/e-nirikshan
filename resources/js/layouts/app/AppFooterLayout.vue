@@ -20,7 +20,7 @@ withDefaults(defineProps<Props>(), {
                     </p>
                     <span class="hidden sm:inline text-gray-400">•</span>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
-                        &copy; {{ new Date().getFullYear() }} E-Nirikshan. All rights reserved.
+                        &copy; {{ new Date().getFullYear() }} Ghaat-Nirikshan. All rights reserved.
                     </p>
                 </div>
                 <div class="flex items-center sm:absolute sm:right-0">

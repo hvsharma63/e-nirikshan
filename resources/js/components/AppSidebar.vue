@@ -29,7 +29,7 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Documentation',
-        href: 'https://pine-swift-34e.notion.site/E-Nirakshak-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
+        href: 'https://pine-swift-34e.notion.site/Ghaat-Nirikshan-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
         icon: BookOpen,
     },
 ];
