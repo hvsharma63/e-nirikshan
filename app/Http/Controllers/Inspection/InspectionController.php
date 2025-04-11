@@ -9,17 +9,17 @@ use App\Http\Resources\ViewInspectionResource;
 use App\Models\Inspection;
 use App\Queries\InspectionQueries;
 use App\Services\InspectionService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\LaravelPdf\PdfBuilder;
 
-use function Spatie\LaravelPdf\Support\pdf;
 
 class InspectionController extends Controller
 {
@@ -76,21 +76,21 @@ class InspectionController extends Controller
         return $this->inspectionQueries->viewNotePdfByInspectingOfficer($id, Auth::id());
     }
     
-    public function viewNote(int $id): PdfBuilder
+    public function viewNote(int $id): HttpResponse
     {
         $inspection = $this->getNote($id);
 
-        return pdf()
-            ->view('pdf.note', ['inspection' => $inspection])
-            ->name('inspection-note.pdf');
+        return Pdf::loadView('pdfs.note', ['inspection' => $inspection])
+            ->stream('inspection-note.pdf');
     }
 
-    public function downloadNote(int $id): PdfBuilder
+    public function downloadNote(int $id): HttpResponse
     {
         $inspection = $this->getNote($id);
 
-        return pdf()
-            ->view('pdf.note', ['inspection' => $inspection])
-            ->download('inspection-note-' . now()->format('Y-m-d_H-i-s') . '.pdf');
+        $fileName = 'inspection-note-' . now()->format('Y-m-d_H-i-s') . '.pdf';
+        
+        return Pdf::loadView('pdfs.note', ['inspection' => $inspection])
+            ->download($fileName);
     }
 }
