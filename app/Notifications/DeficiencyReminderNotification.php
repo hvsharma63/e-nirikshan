@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DeficiencyReportedNotification extends Notification
+class DeficiencyReminderNotification extends Notification
 {
     use Queueable;
 
@@ -15,16 +15,16 @@ class DeficiencyReportedNotification extends Notification
     {
     }
 
-    public function via($notifiable): array
+    public function via(object $notifiable): array
     {
         return ['mail'];
     }
 
-    public function toMail($notifiable): MailMessage
+    public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Important: New Deficiency Reported - Action Required')
-            ->markdown('emails.deficiency-notification', [
+            ->subject('Reminder: Action Required for Reported Deficiency')
+            ->markdown('emails.deficiency-reminder', [
                 'deficiency' => $this->deficiency,
                 'notifiable' => $notifiable
             ]);
