@@ -3,11 +3,11 @@
     <img src="{{ config('app.url') }}/images/logo.svg" alt="{{ config('app.name') }}" style="width: 100px; height: auto;">
 </div>
 
-# New Deficiency Reported
+# Reminder: Attend to Reported Deficiencies
 
 Hello {{ $notifiable->name }},
 
-A new deficiency has been reported that requires your attention. Please review the details below:
+This is a reminder to attend to the reported deficiencies that require your attention. Please review the details below:
 
 @component('mail::panel')
 ## Deficiency Details
@@ -17,11 +17,11 @@ A new deficiency has been reported that requires your attention. Please review t
 **Description:** {{ $deficiency->note }}
 @endcomponent
 
-@component('mail::button', ['url' => url('/deficiencies/' . $deficiency->id), 'color' => 'primary'])
-Review Deficiency
+@component('mail::button', ['url' => route('deficiencies.show', $deficiency->id), 'color' => 'primary'])
+Attend to Deficiency
 @endcomponent
 
-> If you need any additional information, please contact the Inspecting Officer.
+> Please ensure that the necessary actions are taken promptly. If you need any additional information, contact the Inspecting Officer.
 
 Thanks,<br>
 {{ config('app.name') }}
