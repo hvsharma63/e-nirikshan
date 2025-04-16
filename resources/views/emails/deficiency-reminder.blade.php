@@ -17,7 +17,7 @@ This is a reminder to attend to the reported deficiencies that require your atte
 **Description:** {{ $deficiency->note }}
 @endcomponent
 
-@component('mail::button', ['url' => route('deficiencies.show', $deficiency->id), 'color' => 'primary'])
+@component('mail::button', ['url' => route('deficiencies.view', $deficiency->id), 'color' => 'primary'])
 Attend to Deficiency
 @endcomponent
 

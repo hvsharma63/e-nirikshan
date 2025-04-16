@@ -67,7 +67,7 @@ class DeficiencyQueries {
     public function getPendingDeficiencies(): Collection {
         return Deficiency::query()
             ->withOnly(['inspection:id,location', 'pertainsTo:id,name,email'])
-            ->select(['inspection_id','pertains_to','note','status', 'created_at'])
+            ->select(['id', 'inspection_id','pertains_to','note','status', 'created_at'])
             ->where('status', DeficiencyStatusEnum::PENDING)
             ->get();
     }
