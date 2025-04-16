@@ -29,9 +29,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const page = usePage<SharedData>();
 const user = page.props.auth.user as User;
+
+const getCurrentDateTime = () => {
+    const now = new Date();
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+};
+
 const form = useForm({
     location: '',
-    datetime: '',
+    datetime: getCurrentDateTime(),
     is_draft: false as boolean,
     attended_by: user.name,
     attended_by_id: user.id,
