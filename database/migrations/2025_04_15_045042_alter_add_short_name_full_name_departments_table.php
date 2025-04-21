@@ -12,7 +12,9 @@ return new class extends Migration
     {
         // Drop foreign key from users table
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeignIdFor(Department::class);
+            $table->dropForeign(['department_id']);
+            $table->dropColumn('department_id');
+            $table->dropColumn('designation');
         });
 
         // Modify departments table

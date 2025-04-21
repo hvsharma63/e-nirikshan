@@ -178,7 +178,7 @@ onMounted(() => {
                                         <div class="min-w-0 flex-1">
                                             <h3 class="font-medium">{{ deficiency.pertains_to.name }}</h3>
                                             <span class="text-sm text-gray-500 block">{{
-                                                deficiency.pertains_to.designation }}</span>
+                                                deficiency.pertains_to.active_designation.address_asc }}</span>
                                             <div class="text-sm text-gray-500 mt-1 sm:hidden">
                                                 Action Date: {{ deficiency.action_date }}
                                             </div>
@@ -200,7 +200,7 @@ onMounted(() => {
                                                 {{ deficiency.note }}
                                             </p>
                                             <div class="mt-3 text-sm text-gray-500">
-                                                Reported on {{ deficiency.reported_on }}
+                                                Inspected on {{ deficiency.reported_on }}
                                             </div>
                                         </div>
 
@@ -217,7 +217,8 @@ onMounted(() => {
                                                         <span class="font-medium text-gray-900">{{
                                                             deficiency.pertains_to.name }}</span>
                                                         <span class="text-sm text-gray-500 block">{{
-                                                            deficiency.pertains_to.designation }}</span>
+                                                            deficiency.pertains_to.active_designation.address_asc
+                                                        }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-start gap-3">

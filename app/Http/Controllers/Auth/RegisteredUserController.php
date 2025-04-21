@@ -59,12 +59,12 @@ class RegisteredUserController extends Controller
 
     public function listUsersForDropdown(User $user): JsonResource {
 
-        $users = $this->userQueries->getUsers(Auth::id());
+        $users = $this->userQueries->getBranchOfficers(Auth::id());
 
         $users = $users->map(function ($user)  {
             return [
                 'id' => $user->id,
-                'name' =>  "{$user->name} - {$user->designation}",
+                'name' =>  "{$user->name} - {$user->activeDesignation->address_asc}",
             ];
         });
         return JsonResource::collection($users);

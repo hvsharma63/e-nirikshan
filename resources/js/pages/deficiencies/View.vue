@@ -121,7 +121,8 @@ const downloadNote = () => {
                                     <div>
                                         <span class="text-sm text-gray-500">Inspected By</span>
                                         <p class="font-medium">{{ deficiency.attended_by.name }}</p>
-                                        <p class="text-sm">{{ deficiency.attended_by.designation }}</p>
+                                        <p class="text-sm">{{ deficiency.attended_by.active_designation.address_asc }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

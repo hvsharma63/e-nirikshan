@@ -18,8 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Station::class)->constrained();
             $table->foreignIdFor(Designation::class)->constrained();
             $table->string('address_asc');
-            $table->string('address_desc');
-            $table->boolean('is_active')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

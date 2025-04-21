@@ -29,7 +29,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    designation: string;
+    active_designation: { address_asc: string; };
     pf_no: string;
     dob: string;
     mobile_no: string;
@@ -97,7 +97,12 @@ export interface ItemDeficiency {
 export interface ItemDeficiencyPertainsTo {
     id: number;
     name: string;
-    designation: string;
+    active_designation: UserActiveDesignation;
+}
+
+export interface UserActiveDesignation {
+    id: number;
+    address_asc: string;
 }
 
 export interface ViewInspection {

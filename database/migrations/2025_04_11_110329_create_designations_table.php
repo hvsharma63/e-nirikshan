@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('short_name');
-            $table->boolean('is_branch_officer')->default(false);
+            $table->tinyInteger('level')->default(1);
             $table->timestamps();
         });
     }
