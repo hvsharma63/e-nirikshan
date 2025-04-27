@@ -28,10 +28,10 @@ import { toast } from '@/components/ui/toast';
 
 const breadcrumbs = [
     {
-        title: 'My Inspections',
-        href: '/inspections',
+        title: 'All Inspections',
+        href: '/admin/inspections',
     },
-    { title: 'Inspection Details', href: '/inspections/view' }
+    { title: 'Inspection Details', href: '/admin/inspections/view' }
 ];
 
 const page = usePage<SharedData>();
@@ -75,11 +75,18 @@ const checkIsMobile = () => window.innerWidth < 768;
 const isMobile = ref(checkIsMobile());
 
 const viewNote = () => {
-    window.open(route('inspections.view-note', inspection.id), '_blank');
+    console.log('viewNote', inspection, inspection.id);
+    window.open(route('users.inspections.view-note', {
+        'userId': inspection.attended_by.id,
+        'inspectionId': inspection.id,
+    }), '_blank');
 };
 
 const downloadNote = () => {
-    window.open(route('inspections.download-note', inspection.id), '_blank');
+    window.open(route('users.inspections.download-note', {
+        'userId': inspection.attended_by.id,
+        'inspectionId': inspection.id,
+    }), '_blank');
 };
 
 onMounted(() => {
@@ -135,7 +142,7 @@ onMounted(() => {
                                 <span class="text-sm text-gray-500 flex items-center gap-2">
                                     <User class="w-4 h-4" />Attended By
                                 </span>
-                                <span class="text-lg">{{ inspection.attended_by }}</span>
+                                <span class="text-lg">{{ inspection.attended_by.name }}</span>
                             </div>
                         </div>
                     </div>
@@ -218,7 +225,7 @@ onMounted(() => {
                                                             deficiency.pertains_to.name }}</span>
                                                         <span class="text-sm text-gray-500 block">{{
                                                             deficiency.pertains_to.active_designation.address_asc
-                                                        }}</span>
+                                                            }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-start gap-3">

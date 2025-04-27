@@ -7,32 +7,65 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, CalendarClock, LayoutGrid, ScrollText } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { computed } from 'vue';
+import { usePermissionStore } from '@/stores/permission';
 
-const mainNavItems: NavItem[] = [
+// Initialize Pinia store
+const store = usePermissionStore();
+
+// Define navigation items with required permissions
+
+const generalNavItems: (NavItem & { permission?: string })[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
+        permission: 'view-dashboard',
     },
+];
+
+const adminNavItems: (NavItem & { permission?: string })[] = [
+    {
+        title: 'All Inspections',
+        href: '/admin/inspections',
+        icon: ScrollText,
+        permission: 'view-all-index-inspections',
+    },
+];
+
+
+const officerNavItems: (NavItem & { permission?: string })[] = [
     {
         title: 'My Inspections',
         href: '/inspections',
         icon: ScrollText,
+        permission: 'view-inspections',
     },
     {
         title: 'Received Deficiencies',
         href: '/deficiencies',
         icon: CalendarClock,
+        permission: 'view-deficiencies',
     },
 ];
 
-const footerNavItems: NavItem[] = [
+const footerNavItems: (NavItem)[] = [
     {
         title: 'Documentation',
         href: 'https://pine-swift-34e.notion.site/Ghaat-Nirikshan-Inspection-Portal-1b9ab2f4a3af8045a782f49feee4f609?pvs=74',
         icon: BookOpen,
     },
 ];
+
+// Filter navigation items based on permissions
+const filteredOfficerNavItems = computed(() =>
+    officerNavItems.filter((item) => !item.permission || (store.hasPermission(item.permission)))
+);
+
+const filteredAdminNavItems = computed(() =>
+    adminNavItems.filter((item) => !item.permission || (store.hasPermission(item.permission)))
+);
+
 </script>
 
 <template>
@@ -41,7 +74,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="route('dashboard.index')">
                         <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -50,7 +83,9 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMain :items="generalNavItems" :title="'Dashboard'" />
+            <NavMain :items="filteredAdminNavItems" :title="'Admin'" v-if="store.hasRole('admin')" />
+            <NavMain :items="filteredOfficerNavItems" :title="'Officer'" v-if="store.hasRole('officer')" />
         </SidebarContent>
 
         <SidebarFooter>

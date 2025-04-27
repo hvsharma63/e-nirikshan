@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Common;
 
 use App\Enums\InspectionDayPeriodEnum;
 use App\Enums\InspectionStatusEnum;
-use App\Http\Resources\Inspection\ItemDeficiencyResource;
+use App\Http\Resources\Officer\Inspection\ItemDeficiencyResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,7 +21,7 @@ class ViewInspectionResource extends JsonResource
         return [
             'id' => $this->id,
             'location' => $this->location,
-            'attended_by' => $this->attendedBy->name,
+            'attended_by' => $this->attendedBy,
             'datetime' => Carbon::parse($this->datetime)->format('d M Y H:i A'),
             'day_period' => InspectionDayPeriodEnum::fromValue($this->day_period)->description,
             'no_deficiencies_found' => $this->no_deficiencies_found,

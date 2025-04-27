@@ -29,11 +29,15 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['update:currentPage'])
 
 const handlePageChange = (page: number) => {
-    if (page !== props.currentPage) {
-        emit('update:currentPage', page)
-    }
+    emit('update:currentPage', page)
 }
 
+const getVisiblePages = (items: any[], currentPage: number) => {
+    const pageItems = items.filter(item => item.type === 'page');
+    const currentIndex = pageItems.findIndex(item => item.value === currentPage);
+    const start = Math.max(0, Math.min(pageItems.length - 3, currentIndex - 1));
+    return pageItems.slice(start, start + 3);
+}
 </script>
 
 <template>
@@ -45,14 +49,13 @@ const handlePageChange = (page: number) => {
             of {{ totalItems }} results
         </p>
         <div class="flex justify-center w-full sm:w-auto sm:justify-start">
-            <Pagination v-slot="{ page }" :total="totalItems" :items-per-page="itemsPerPage"
-                :sibling-count="siblingCount" :show-edges="showEdges" :default-page="currentPage"
-                @update:page="handlePageChange">
+            <Pagination v-slot="{ page }" :page="currentPage" :total="totalItems" :items-per-page="itemsPerPage"
+                :sibling-count="siblingCount" :show-edges="showEdges" @update:page="handlePageChange">
                 <PaginationList v-slot="{ items }" class="flex items-center gap-2">
                     <PaginationFirst v-if="showEdges" />
                     <PaginationPrev />
 
-                    <template v-for="(item, index) in items" :key="index">
+                    <template v-for="(item, index) in getVisiblePages(items, currentPage)" :key="index">
                         <PaginationListItem v-if="item.type === 'page'" :value="item.value" as-child>
                             <Button class="h-9 w-9 p-0" :variant="item.value === page ? 'default' : 'outline'">
                                 {{ item.value }}

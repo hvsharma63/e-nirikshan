@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Inspection;
+namespace App\Http\Resources\Officer\Inspection;
 
 use App\Enums\DeficiencyStatusEnum;
 use Carbon\Carbon;

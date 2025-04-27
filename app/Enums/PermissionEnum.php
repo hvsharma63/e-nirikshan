@@ -13,9 +13,16 @@ final class PermissionEnum extends Enum
     const attend = 'attend';
     const download = 'download';
 
+    const VIEW_ALL_INDEX = 'view-all-index';
+
     public static function viewIndexPermissionFor(ModuleEnum $module): string
     {
         return self::VIEW_INDEX .'-'. $module->value;
+    }
+
+    public static function viewAllIndexPermissionFor(ModuleEnum $module): string
+    {
+        return self::VIEW_ALL_INDEX .'-'. $module->value;
     }
 
     public static function viewPermissionFor(ModuleEnum $module): string

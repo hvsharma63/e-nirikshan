@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Inspection;
+namespace App\Http\Resources\Officer\Inspection;
 
 use App\Enums\InspectionDayPeriodEnum;
 use App\Enums\InspectionStatusEnum;
@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListInspectionResource extends JsonResource
+class ListResource extends JsonResource
 {
     public function toArray(Request $request): array
     {

@@ -51,7 +51,7 @@ class DeficiencyController extends Controller
         
         dispatch(new SendDeficiencyNotificationJob($deficiency));
         
-        return Redirect::route('inspections.view', ['id' => $id])
+        return Redirect::route('officers.inspections.view', ['id' => $id])
             ->with('success', "Reminder Sent Successfully");
     }
 

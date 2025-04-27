@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Common\ListUserDropdownResource;
 use App\Models\User;
 use App\Queries\UserQueries;
 use Illuminate\Auth\Events\Registered;
@@ -20,7 +21,7 @@ class RegisteredUserController extends Controller
 {
 
     public function __construct(
-        protected UserQueries $userQueries
+        private UserQueries $userQueries,
     ){}
 
     /**
@@ -54,19 +55,13 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return to_route('dashboard');
+        return to_route('dashboard.index');
     }
 
-    public function listUsersForDropdown(User $user): JsonResource {
+    public function listBranchOfficers(): JsonResource {
 
         $users = $this->userQueries->getBranchOfficers(Auth::id());
 
-        $users = $users->map(function ($user)  {
-            return [
-                'id' => $user->id,
-                'name' =>  "{$user->name} - {$user->activeDesignation->address_asc}",
-            ];
-        });
-        return JsonResource::collection($users);
+        return ListUserDropdownResource::collection($users);
     }
 }

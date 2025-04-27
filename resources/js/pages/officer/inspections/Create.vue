@@ -49,7 +49,7 @@ const form = useForm({
     no_deficiencies_found: false,
 });
 
-const users = ref<{ id: number; name: string; label: string; }[]>([]);
+const users = ref<{ name: string; value: number; }[]>([]);
 
 const addDeficiency = () => {
     form.deficiencies.push({ note: '', pertains_to: null });
@@ -61,13 +61,13 @@ const removeDeficiency = (index: number) => {
 
 const submit = (type: 'draft' | 'create') => {
     form.is_draft = type === 'draft';
-    form.post(route('inspections.save'), {
+    form.post(route('officers.inspections.save'), {
         preserveScroll: true,
     });
 };
 
 const getUsersList = () => {
-    apiService.get('/users').then((response) => {
+    apiService.get(route('users.list-branch-officers')).then((response) => {
         users.value = response.data;
     });
 }
@@ -136,8 +136,8 @@ onMounted(() => {
                                         <div class="space-y-2 mt-4">
                                             <Label :for="`deficiency_user_${index}`">Pertains To</Label>
                                             <v-select v-model="deficiency.pertains_to" :options="users"
-                                                :reduce="(user: any) => user.id"
-                                                :get-option-label="(option: any) => option.name"
+                                                :reduce="(user: any) => user.value"
+                                                :get-option-label="(option: any) => option.label"
                                                 placeholder="Search or Select Officer" :searchable="true"
                                                 :clearable="true" />
                                             <InputError

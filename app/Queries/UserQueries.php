@@ -17,13 +17,22 @@ class UserQueries {
             ->first('email'); 
     }
 
-    public function getBranchOfficers($loggedInUserId): Collection {  
+    public function getBranchOfficers(?int $loggedInUserId): Collection {  
         return User::query()
             ->with(['activeDesignation:id,user_id,designation_id,address_asc'])
             ->whereHas('activeDesignation.designation', function($query) {
                 return $query->where('level', DesignationLevelEnum::BRANCH_OFFICER);
             })
-            ->where('id', '!=', $loggedInUserId)
+            ->when($loggedInUserId, function($query) use ($loggedInUserId) {
+                return $query->where('id', '!=', $loggedInUserId);
+            })
+            ->select(['id', 'name'])
+            ->get();   
+    }
+
+    public function getUsers(): Collection {  
+        return User::query()
+            ->with(['activeDesignation:id,user_id,designation_id,address_asc'])
             ->select(['id', 'name'])
             ->get();   
     }

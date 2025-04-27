@@ -132,5 +132,9 @@ export interface ViewDeficiency {
     deficiency_created_at: string;
 }
 
+export interface DropdownItem {
+    label: string;
+    value: string | number;
+}
 
 export type BreadcrumbItemType = BreadcrumbItem;

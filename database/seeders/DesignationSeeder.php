@@ -23,7 +23,8 @@ use Spatie\Permission\Models\Role;
 class DesignationSeeder extends Seeder
 {
     public $createdRoles = [];
-    public $createdPermissions = [];
+    public $createdPermissionsForOfficer = [];
+    public $createdPermissionsForAdmin = [];
     /**
      * Run the database seeds.
      */
@@ -263,20 +264,42 @@ class DesignationSeeder extends Seeder
             PermissionEnum::downloadPermissionFor(ModuleEnum::INSPECTION_NOTE()),
             PermissionEnum::viewPermissionFor(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::attendPermissionFor(ModuleEnum::DEFICIENCIES()),
+            "view-dashboard",
+            "list-users",
         ]);
 
         $permissions->each(function ($permission) {
             $createdPermission = Permission::create(['name' => $permission, 'guard_name' => 'web']);
-            array_push($this->createdPermissions, $createdPermission);
+            array_push($this->createdPermissionsForOfficer, $createdPermission);
+        });
+
+        // Assign permissions to admin roles
+        $permissions = collect([
+            PermissionEnum::viewAllIndexPermissionFor(ModuleEnum::INSPECTIONS()),
+            PermissionEnum::viewAllIndexPermissionFor(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::viewPermissionFor(ModuleEnum::INSPECTION_NOTE()),
+            PermissionEnum::downloadPermissionFor(ModuleEnum::INSPECTION_NOTE()),
+            PermissionEnum::remindPermissionFor(ModuleEnum::DEFICIENCIES()),
+            "view-dashboard-stats",
+        ]);
+
+        $permissions->each(function ($permission) {
+            $createdPermission = Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            array_push($this->createdPermissionsForAdmin, $createdPermission);
         });
         Log::info('Permissions seeded successfully');
     }
 
     public function assignPermissionsToRoles() {
         Log::info('Assigning permissions to roles...');
-        foreach ($this->createdRoles as $role) {
-           $role->givePermissionTo($this->createdPermissions);
-        }
+        
+        $officerRole = Role::where('name', RoleEnum::OFFICER)->first();
+        $officerRole->givePermissionTo($this->createdPermissionsForOfficer);
+        
+        // Assign admin permissions to admin role
+        $adminRole = Role::where('name', RoleEnum::ADMIN)->first();
+        $adminRole->givePermissionTo($this->createdPermissionsForAdmin);
+        
         Log::info('Permissions assigned to roles successfully');
     }
 

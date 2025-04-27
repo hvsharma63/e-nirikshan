@@ -10,7 +10,16 @@ use Illuminate\Support\Collection;
 
 class DeficiencyQueries {
 
+    public $fromDate = null;
+    public $toDate = null;
+
     public function __construct() {
+    }
+
+    public function setDateRange(Carbon $from, Carbon $to)
+    {
+        $this->fromDate = $from;
+        $this->toDate = $to;
     }
 
     public function list(int $userId): LengthAwarePaginator {
@@ -71,5 +80,31 @@ class DeficiencyQueries {
             ->select(['id', 'inspection_id','pertains_to','note','status', 'created_at'])
             ->where('status', DeficiencyStatusEnum::PENDING)
             ->get();
+    }
+
+    public function getDeficienciesCount(): int {
+        return Deficiency::query()
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            })
+            ->count();
+    }
+
+    public function getPendingDeficienciesCount(): int {
+        return Deficiency::query()
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            })
+            ->where('status', DeficiencyStatusEnum::PENDING)
+            ->count();
+    }
+
+    public function getAttendedDeficienciesCount(): int {
+        return Deficiency::query()
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            })
+            ->where('status', DeficiencyStatusEnum::ATTENDED)
+            ->count();
     }
 }
