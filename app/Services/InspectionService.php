@@ -29,7 +29,7 @@ class InspectionService {
             $deficiencies = $inspection->deficiencies()->createMany($deficiencies);
             
             foreach ($deficiencies as $deficiency) {
-                dispatch(new SendDeficiencyNotificationJob($deficiency));
+                dispatch(new SendDeficiencyNotificationJob($deficiency))->afterCommit();
             }            
         }
 

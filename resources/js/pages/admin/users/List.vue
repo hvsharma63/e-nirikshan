@@ -11,43 +11,26 @@ const page = usePage<SharedData>();
 const filterConfig: FilterConfig = {
     filters: [
         {
-            id: 'location',
+            id: 'search',
             type: 'search',
             label: 'Search',
             key: 'search',
-            placeholder: 'Search by location...'
+            placeholder: 'Search by user...'
         },
-        {
-            id: 'inspectionDate',
-            type: 'daterange',
-            label: 'Inspection Date',
-            keys: { from: 'from', to: 'to' },
-            key: null,
-        },
-        {
-            id: 'branchOfficerMultiselect',
-            type: 'multiselect',
-            label: 'User',
-            keys: null,
-            key: 'users',
-            placeholder: 'Select Officer',
-            options: page.props.users?.data as DropdownItem[],
-        }
     ]
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'All Inspections', href: '/admin/inspections' },
+    { title: 'All Users', href: '/admin/users' },
 ];
 const columns = [
     { accessorKey: 'id', header: 'ID' },
-    { accessorKey: 'location', header: 'Location' },
-    { accessorKey: 'attended_by', header: 'Inspector' },
-    { accessorKey: 'deficiencies_count', header: 'Total Deficiencies' },
-    { accessorKey: 'date', header: 'Date' },
-    { accessorKey: 'time', header: 'Time' },
-    { accessorKey: 'day_period', header: 'Period' },
-    { accessorKey: 'status', header: 'Status' },
+    { accessorKey: 'name', header: 'Name' },
+    { accessorKey: 'designation', header: 'Designation' },
+    { accessorKey: 'mobile_no', header: 'Mobile No.' },
+    { accessorKey: 'pf_no', header: 'PF No.' },
+    { accessorKey: 'inspections_attended_count', header: 'Inspections Attended' },
+    { accessorKey: 'deficiencies_attended_count', header: 'Deficiencies Attended' },
 ];
 
 const filters = ref({});
@@ -64,16 +47,16 @@ onMounted(() => {
 
 <template>
 
-    <Head title="All Inspections" />
+    <Head title="All Users" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col space-y-8 rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800 sm:p-8">
             <AppFilter :filter-config="filterConfig" :loading="isLoading" @filter="handleFilter" />
 
-            <AppDataTable :apiUrl="route('admin.inspections.list')" :columns="columns" :filters="filters"
-                @update:loading="(val) => isLoading = val" empty-message="No inspections found"
-                empty-description="When you create Inspections, they will appear here.">
+            <AppDataTable :apiUrl="route('admin.users.list')" :columns="columns" :filters="filters"
+                @update:loading="(val) => isLoading = val" empty-message="No users found"
+                empty-description="If users get assigned to you, they will appear here.">
                 <template #actions="{ row }">
-                    <Link :href="`/admin/inspections/${row.id}`"
+                    <Link :href="`/admin/users/${row.id}/details`"
                         class="inline-flex items-center gap-2 text-primary hover:text-primary/80">
                     <Eye class="h-4 w-4" />
                     View

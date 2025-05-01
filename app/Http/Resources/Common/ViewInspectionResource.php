@@ -22,7 +22,7 @@ class ViewInspectionResource extends JsonResource
             'id' => $this->id,
             'location' => $this->location,
             'attended_by' => $this->attendedBy,
-            'datetime' => Carbon::parse($this->datetime)->format('d M Y H:i A'),
+            'datetime' => Carbon::parse($this->datetime)->format('d M Y H:i'),
             'day_period' => InspectionDayPeriodEnum::fromValue($this->day_period)->description,
             'no_deficiencies_found' => $this->no_deficiencies_found,
             'status' => InspectionStatusEnum::fromValue($this->status)->description,

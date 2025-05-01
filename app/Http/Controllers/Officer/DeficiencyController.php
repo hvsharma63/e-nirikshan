@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Deficiency;
+namespace App\Http\Controllers\Officer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Deficiency\AttendDeficiencyRequest;
-use App\Http\Resources\Deficiency\ListDeficiencyResource;
-use App\Http\Resources\ViewDeficiencyResource;
+use App\Http\Resources\Officer\Deficiency\ListResource;
+use App\Http\Resources\Officer\Deficiency\ViewResource;
 use App\Jobs\SendDeficiencyNotificationJob;
 use App\Models\Inspection;
 use App\Queries\DeficiencyQueries;
@@ -33,15 +33,15 @@ class DeficiencyController extends Controller
     
     public function index(): Response
     {
-        return Inertia::render('deficiencies/List');
+        return Inertia::render('officer/deficiencies/List');
     }
 
     public function view(int $id): Response
     {
         $deficiency = $this->deficiencyService->view($id, Auth::id());
 
-        return Inertia::render('deficiencies/View',[
-            'deficiency' => new ViewDeficiencyResource($deficiency)
+        return Inertia::render('officer/deficiencies/View',[
+            'deficiency' => new ViewResource($deficiency)
         ]);
     }
 
@@ -64,7 +64,7 @@ class DeficiencyController extends Controller
             
             DB::commit();
             
-            return Redirect::route('deficiencies.view', ['id' => $id])
+            return Redirect::route('officers.deficiencies.view', ['id' => $id])
                 ->with('success', "Deficiency Attended Successfully");
             
         } catch (\Throwable $th) {
@@ -75,7 +75,7 @@ class DeficiencyController extends Controller
 
     public function list(Request $request): AnonymousResourceCollection {
         $deficiencies = $this->deficiencyQueries->list(Auth::id());
-        return ListDeficiencyResource::collection($deficiencies);
+        return ListResource::collection($deficiencies);
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\User\ListResource;
 use App\Http\Resources\Common\ListUserDropdownResource;
 use App\Models\User;
 use App\Queries\UserQueries;

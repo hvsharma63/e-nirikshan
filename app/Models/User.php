@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\DeficiencyStatusEnum;
+use App\Enums\InspectionStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,5 +65,59 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserDesignation::class)
             ->where('is_active', true);
+    }
+
+    public function inspectionsAttended(): HasMany
+    {
+        return $this->hasMany(Inspection::class, 'attended_by');
+    }
+
+    public function inspectionsInProgress(): HasMany
+    {
+        return $this->hasMany(Inspection::class, 'attended_by')
+            ->where('status', InspectionStatusEnum::PROGRESS);
+    }
+
+    public function inspectionsCompleted(): HasMany
+    {
+        return $this->hasMany(Inspection::class, 'attended_by')
+            ->where('status', InspectionStatusEnum::COMPLETED);
+    }
+
+    public function deficienciesAttended(): HasMany
+    {
+        return $this->hasMany(Deficiency::class, 'pertains_to')
+            ->where('status', DeficiencyStatusEnum::ATTENDED);
+    }
+
+    public function deficienciesPending(): HasMany
+    {
+        return $this->hasMany(Deficiency::class, 'pertains_to')
+            ->where('status', DeficiencyStatusEnum::PENDING);
+    }
+
+    public function deficienciesSeen(): HasMany
+    {
+        return $this->hasMany(Deficiency::class, 'pertains_to')
+            ->where('status', DeficiencyStatusEnum::SEEN);
+    }
+
+    public function deficienciesTotal(): HasMany
+    {
+        return $this->hasMany(Deficiency::class, 'pertains_to');
+    }
+
+    public function recentInspections(): HasMany
+    {
+        return $this->hasMany(Inspection::class, 'attended_by')
+            ->latest()
+            ->take(5);
+    }
+
+    public function recentDeficiencies(): HasMany
+    {
+        return $this->hasMany(Deficiency::class, 'pertains_to')
+            ->latest()
+            ->take(5);
     }
 }

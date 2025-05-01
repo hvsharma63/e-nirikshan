@@ -1,32 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Input from '@/components/ui/input/Input.vue';
-import Textarea from '@/components/ui/textarea/Textarea.vue';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { AlertCircle, CheckCircle, Clock, MapPin, User, Calendar, FileText, AlertTriangle, MessageSquare, CalendarCheck, ClipboardList } from 'lucide-vue-next';
+import { AlertCircle, CheckCircle, Clock, MapPin, User, Calendar, MessageSquare, CalendarCheck, ClipboardList } from 'lucide-vue-next';
 import { SharedData, ViewDeficiency } from '@/types';
 import { onMounted } from 'vue';
-import InputError from '@/components/InputError.vue';
 
 const breadcrumbs = [
-    { title: 'Received Deficiencies', href: '/deficiencies' },
-    { title: 'Deficiency Details', href: '/deficiencies' },
+    { title: 'All Deficiencies', href: '/admin/deficiencies' },
+    { title: 'Deficiency Details', href: '/admin/deficiencies' },
 ];
 
 const page = usePage<SharedData>();
-
 const deficiency: ViewDeficiency = (page.props.deficiency as { data: ViewDeficiency }).data;
 
-const deficiencyForm = useForm({
-    inspection_id: deficiency.inspection_id,
-    comment: '',
-    action_date: '',
-});
+// Remove form-related code and keep only view functions
+const viewNote = () => {
+    window.open(route('officers.deficiencies.view-note', deficiency.inspection_id), '_blank');
+};
 
-const isSubmitting = ref(false);
+const downloadNote = () => {
+    window.open(route('officers.deficiencies.download-note', deficiency.inspection_id), '_blank');
+};
 
 const getStatusColor = (deficiency: ViewDeficiency) => {
     if (deficiency.inspection_status === 'Completed') return 'text-green-600';
@@ -40,37 +36,29 @@ const getStatusIcon = (deficiency: ViewDeficiency) => {
     return AlertCircle;
 };
 
-const submitResponse = async (deficiencyId: number) => {
-    if (isSubmitting.value) return;
-    isSubmitting.value = true;
-    try {
-        await deficiencyForm.post(route('deficiencies.attend', {
-            'id': deficiencyId
-        }), {
-            onFinish: () => {
-                isSubmitting.value = false;
-            },
-            preserveScroll: true,
-            preserveState: false,
-            replace: true
-        });
-    } catch (error) {
-        console.error('Failed to submit response:', error);
-        isSubmitting.value = false;
+// Replace the DeficiencyStatus constant and getStatusMessage function
+const DeficiencyStatus = {
+    PENDING: 'Pending',
+    SEEN: 'Seen',
+    ATTENDED: 'Attended'
+} as const;
+
+const getStatusMessage = (status: string) => {
+    switch (status) {
+        case DeficiencyStatus.PENDING:
+            return 'No response has been submitted yet. The officer has not seen this deficiency.';
+        case DeficiencyStatus.SEEN:
+            return 'The Officer has seen this deficiency but has not submitted a response yet.';
+        case DeficiencyStatus.ATTENDED:
+            return null; // We don't show this message when status is ATTENDED
+        default:
+            return 'No response has been submitted yet.';
     }
 };
 
 onMounted(() => {
     console.log(deficiency);
 });
-
-const viewNote = () => {
-    window.open(route('deficiencies.view-note', deficiency.inspection_id), '_blank');
-};
-
-const downloadNote = () => {
-    window.open(route('deficiencies.download-note', deficiency.inspection_id), '_blank');
-};
 
 </script>
 
@@ -125,6 +113,7 @@ const downloadNote = () => {
                                         </p>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="space-y-4">
                                 <div class="flex items-start gap-3">
@@ -132,6 +121,7 @@ const downloadNote = () => {
                                     <div>
                                         <span class="text-sm text-gray-500">Location</span>
                                         <p class="font-medium">{{ deficiency.location }}</p>
+                                        <span class="text-sm text-gray-500"> </span>
                                     </div>
                                 </div>
                             </div>
@@ -149,12 +139,45 @@ const downloadNote = () => {
                         </div>
                     </div>
 
-                    <!-- Response Section -->
-                    <div v-if="deficiency.deficiency_status === 'Attended'"
+                    <!-- Officer Details Card -->
+                    <div class="bg-white rounded-lg p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow">
+                        <h2 class="text-lg font-medium mb-4 pb-2 border-b">Pertaining Officer</h2>
+                        <div class="flex items-start gap-4">
+                            <User class="w-8 h-8 text-purple-500" />
+                            <div class="space-y-2">
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">{{ deficiency.pertains_to?.name ||
+                                        'N/A' }}</h3>
+                                    <p class="text-sm text-gray-600">{{
+                                        deficiency.pertains_to?.active_designation?.address_asc || 'N/A' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deficiencies Card -->
+                    <div class="bg-white p-4 rounded-lg border-l-4 border border-red-400 shadow-sm">
+                        <h4 class="font-medium text-gray-900 mb-3 pb-2 border-b flex items-center gap-2">
+                            <AlertCircle class="w-4 h-4 text-red-500" />
+                            Deficiencies / Observations / Abnormalities
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="flex-1">
+                                    <p class="text-gray-700 whitespace-pre-line">{{ deficiency.note }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Response Details Section -->
+                    <div v-if="deficiency.deficiency_status === DeficiencyStatus.ATTENDED"
                         class="bg-white p-4 rounded-lg border-l-4 border border-green-400 shadow-sm">
                         <h4 class="font-medium text-gray-900 mb-3 pb-2 border-b flex items-center gap-2">
                             <MessageSquare class="w-4 h-4 text-green-500" />
-                            Your Response Details
+                            Response Details
                             <span class="text-sm text-gray-500 ml-auto flex items-center gap-2">
                                 <Clock class="w-4 h-4" />
                                 Responded on {{ deficiency.deficiency_created_at }}
@@ -164,7 +187,7 @@ const downloadNote = () => {
                             <div class="flex items-start gap-3">
                                 <MessageSquare class="w-5 h-5 text-green-400 mt-0.5" />
                                 <div class="flex-1">
-                                    <span class="text-sm text-gray-500">Your Comment</span>
+                                    <span class="text-sm text-gray-500">Comment</span>
                                     <p class="mt-1 text-gray-700">{{ deficiency.comment }}</p>
                                 </div>
                             </div>
@@ -178,46 +201,14 @@ const downloadNote = () => {
                         </div>
                     </div>
 
-                    <!-- Response Form -->
-                    <Form v-else @submit="submitResponse(deficiency.id)"
-                        class="bg-white p-6 rounded-lg border shadow-sm">
-                        <h4 class="font-medium text-gray-900 mb-4">Your Response</h4>
-                        <div class="space-y-4">
-                            <FormField name="comment">
-                                <FormItem>
-                                    <FormLabel>Comment</FormLabel>
-                                    <FormControl>
-                                        <Textarea v-model="deficiencyForm.comment"
-                                            :disabled="deficiency.inspection_status === 'attended'"
-                                            placeholder="Enter your response..." rows="3" />
-                                    </FormControl>
-                                    <FormMessage />
-                                    <InputError :message="deficiencyForm.errors.comment" />
-                                </FormItem>
-                            </FormField>
-
-                            <FormField name="action_date">
-                                <FormItem>
-                                    <FormLabel>Action Date</FormLabel>
-                                    <FormControl>
-                                        <Input type="date" v-model="deficiencyForm.action_date"
-                                            :disabled="deficiency.inspection_status === 'attended'" />
-                                    </FormControl>
-                                    <FormMessage />
-                                    <InputError :message="deficiencyForm.errors.action_date" />
-                                </FormItem>
-                            </FormField>
-
-                            <div class="flex justify-end">
-                                <Button type="submit"
-                                    :disabled="deficiency.inspection_status === 'attended' || isSubmitting || deficiencyForm.processing"
-                                    :loading="isSubmitting || deficiencyForm.processing" class="w-full sm:w-auto">
-                                    {{ isSubmitting || deficiencyForm.processing ? 'Submitting...' : 'Submit Response'
-                                    }}
-                                </Button>
-                            </div>
-                        </div>
-                    </Form>
+                    <!-- Show message if no response -->
+                    <div v-else-if="getStatusMessage(deficiency.deficiency_status)"
+                        class="bg-gray-50 p-4 rounded-lg border" :class="{
+                            'border-yellow-300 bg-yellow-50': deficiency.deficiency_status === DeficiencyStatus.PENDING,
+                            'border-blue-300 bg-blue-50': deficiency.deficiency_status === DeficiencyStatus.SEEN
+                        }">
+                        <p class="text-gray-600">{{ getStatusMessage(deficiency.deficiency_status) }}</p>
+                    </div>
                 </div>
             </div>
         </div>

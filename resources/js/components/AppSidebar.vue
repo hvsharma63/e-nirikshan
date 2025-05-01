@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, CalendarClock, LayoutGrid, ScrollText } from 'lucide-vue-next';
+import { BookOpen, CalendarClock, LayoutGrid, ScrollText, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { computed } from 'vue';
 import { usePermissionStore } from '@/stores/permission';
@@ -29,6 +29,18 @@ const adminNavItems: (NavItem & { permission?: string })[] = [
         title: 'All Inspections',
         href: '/admin/inspections',
         icon: ScrollText,
+        permission: 'view-all-index-inspections',
+    },
+    {
+        title: 'All Deficiencies',
+        href: '/admin/deficiencies',
+        icon: CalendarClock,
+        permission: 'view-all-index-inspections',
+    },
+    {
+        title: 'All Users',
+        href: '/admin/users',
+        icon: Users,
         permission: 'view-all-index-inspections',
     },
 ];

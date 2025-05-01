@@ -121,7 +121,9 @@ export interface ViewDeficiency {
     id: number;
     inspection_id: number;
     location: string;
+    note: string;
     attended_by: ItemDeficiencyPertainsTo;
+    pertains_to?: ItemDeficiencyPertainsTo;
     datetime: string;
     deficiency_note: string;
     day_period: string;
@@ -130,11 +132,56 @@ export interface ViewDeficiency {
     action_date: string;
     comment: string;
     deficiency_created_at: string;
+    deficiency_status: string;
 }
 
 export interface DropdownItem {
     label: string;
     value: string | number;
+}
+
+export interface ViewUser {
+    id: number;
+    name: string;
+    email: string;
+    dob: string;
+    pf_no: string;
+    mobile_no: string;
+    current_designation: UserActiveDesignation;
+    inspection_statistics: {
+        completed: number;
+        total: number;
+        progress: number;
+    };
+    deficiency_statistics: {
+        attended: number;
+        seen: number;
+        pending: number;
+        total: number;
+    };
+    recent_inspections: RecentInspection[];
+    recent_deficiencies: RecentDeficiency[];
+}
+
+export interface RecentInspection {
+    id: number;
+    datetime: string;
+    location: string;
+    status: string;
+}
+
+export interface RecentDeficiency {
+    id: number;
+    created_at: string;
+    note: string;
+    status: string;
+}
+
+export interface RecentDeficiency {
+    id: number;
+    date: string;
+    note: string;
+    status: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

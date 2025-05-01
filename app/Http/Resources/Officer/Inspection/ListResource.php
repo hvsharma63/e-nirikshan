@@ -17,7 +17,7 @@ class ListResource extends JsonResource
             'location' => $this->location,
             'deficiencies_count' => $this->deficiencies_count,
             'date' => Carbon::parse($this->datetime)->format('d M Y'),
-            'time' => Carbon::parse($this->datetime)->format('H:i A'),
+            'time' => Carbon::parse($this->datetime)->format('H:i'),
             'day_period' => InspectionDayPeriodEnum::fromValue($this->day_period)->description,
             'status' => InspectionStatusEnum::fromValue($this->status)->description,
         ];

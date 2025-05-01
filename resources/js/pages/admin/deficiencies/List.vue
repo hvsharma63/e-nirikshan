@@ -11,11 +11,11 @@ const page = usePage<SharedData>();
 const filterConfig: FilterConfig = {
     filters: [
         {
-            id: 'location',
+            id: 'search',
             type: 'search',
             label: 'Search',
             key: 'search',
-            placeholder: 'Search by location...'
+            placeholder: 'Search by location, note...'
         },
         {
             id: 'inspectionDate',
@@ -25,11 +25,20 @@ const filterConfig: FilterConfig = {
             key: null,
         },
         {
-            id: 'branchOfficerMultiselect',
-            type: 'multiselect',
-            label: 'User',
+            id: 'inspectorSelection',
+            type: 'select',
+            label: 'Inspector',
             keys: null,
-            key: 'users',
+            key: 'inspector',
+            placeholder: 'Select Officer',
+            options: page.props.users?.data as DropdownItem[],
+        },
+        {
+            id: 'per',
+            type: 'select',
+            label: 'Pertaining Officer',
+            keys: null,
+            key: 'pertaining_officer',
             placeholder: 'Select Officer',
             options: page.props.users?.data as DropdownItem[],
         }
@@ -37,17 +46,18 @@ const filterConfig: FilterConfig = {
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'All Inspections', href: '/admin/inspections' },
+    { title: 'All Deficiencies', href: '/admin/deficiencies' },
 ];
 const columns = [
     { accessorKey: 'id', header: 'ID' },
     { accessorKey: 'location', header: 'Location' },
+    { accessorKey: 'note', header: 'Note' },
     { accessorKey: 'attended_by', header: 'Inspector' },
-    { accessorKey: 'deficiencies_count', header: 'Total Deficiencies' },
-    { accessorKey: 'date', header: 'Date' },
-    { accessorKey: 'time', header: 'Time' },
-    { accessorKey: 'day_period', header: 'Period' },
-    { accessorKey: 'status', header: 'Status' },
+    { accessorKey: 'pertains_to', header: 'Pertaining Officer' },
+    { accessorKey: 'action_date', header: 'Action Date' },
+    { accessorKey: 'date', header: 'Insp. Date' },
+    { accessorKey: 'time', header: 'Insp. Time' },
+    { accessorKey: 'status', header: 'Def. Status' },
 ];
 
 const filters = ref({});
@@ -64,16 +74,16 @@ onMounted(() => {
 
 <template>
 
-    <Head title="All Inspections" />
+    <Head title="All Deficiencies" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col space-y-8 rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800 sm:p-8">
             <AppFilter :filter-config="filterConfig" :loading="isLoading" @filter="handleFilter" />
 
-            <AppDataTable :apiUrl="route('admin.inspections.list')" :columns="columns" :filters="filters"
-                @update:loading="(val) => isLoading = val" empty-message="No inspections found"
-                empty-description="When you create Inspections, they will appear here.">
+            <AppDataTable :apiUrl="route('admin.deficiencies.list')" :columns="columns" :filters="filters"
+                @update:loading="(val) => isLoading = val" empty-message="No deficiencies found"
+                empty-description="If deficiencies get assigned to you, they will appear here.">
                 <template #actions="{ row }">
-                    <Link :href="`/admin/inspections/${row.id}`"
+                    <Link :href="`/admin/deficiencies/${row.id}`"
                         class="inline-flex items-center gap-2 text-primary hover:text-primary/80">
                     <Eye class="h-4 w-4" />
                     View

@@ -19,7 +19,7 @@ class ListResource extends JsonResource
             'attended_by' => $this->attendedBy->name . ' (' . $this->attendedBy->activeDesignation->address_asc . ')',
             'deficiencies_count' => $this->deficiencies_count,
             'date' => Carbon::parse($this->datetime)->format('d M Y'),
-            'time' => Carbon::parse($this->datetime)->format('H:i A'),
+            'time' => Carbon::parse($this->datetime)->format('H:i'),
             'day_period' => InspectionDayPeriodEnum::fromValue($this->day_period)->description,
             'status' => InspectionStatusEnum::fromValue($this->status)->description,
         ];

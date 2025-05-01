@@ -16,7 +16,7 @@ import {
 export interface FilterConfig {
     filters: Array<{
         id: string;
-        type: 'search' | 'daterange' | 'multiselect';
+        type: 'search' | 'daterange' | 'multiselect' | 'select';
         label: string;
         key: string | null;
         keys?: { from: string; to: string } | null;
@@ -44,7 +44,8 @@ const formState = reactive({
     values: {
         search: {} as Record<string, string>,
         daterange: {} as Record<string, DateRange | null>,
-        multiselect: {} as Record<string, Array<any>>
+        multiselect: {} as Record<string, Array<any>>,
+        select: {} as Record<string, any>
     },
 
     init() {
@@ -55,6 +56,8 @@ const formState = reactive({
                 this.values.daterange[filter.id] = null;
             } else if (filter.type === 'multiselect') {
                 this.values.multiselect[filter.id] = [];
+            } else if (filter.type === 'select') {
+                this.values.select[filter.id] = null;
             }
         });
     },
@@ -63,6 +66,7 @@ const formState = reactive({
         Object.keys(this.values.search).forEach(key => this.values.search[key] = '');
         Object.keys(this.values.daterange).forEach(key => this.values.daterange[key] = null);
         Object.keys(this.values.multiselect).forEach(key => this.values.multiselect[key] = []);
+        Object.keys(this.values.select).forEach(key => this.values.select[key] = null);
     },
 
     getFilters() {
@@ -80,6 +84,9 @@ const formState = reactive({
             } else if (filter.type === 'multiselect') {
                 const value = this.values.multiselect[filter.id];
                 if (value?.length > 0) filters[filter.key] = value.map(v => v.value);
+            } else if (filter.type === 'select') {
+                const value = this.values.select[filter.id];
+                if (value) filters[filter.key] = value.value;
             }
         });
         return filters;
@@ -143,6 +150,13 @@ const clearFilters = () => {
                                                 append-to-body :class="[
                                                     'vue-select-custom',
                                                 ]" />
+                                        </template>
+
+                                        <!-- Select Input -->
+                                        <template v-else-if="filter.type === 'select'">
+                                            <v-select v-model="formState.values.select[filter.id]"
+                                                :options="filter.options" :placeholder="filter.placeholder"
+                                                append-to-body :class="['vue-select-custom']" />
                                         </template>
                                     </div>
                                 </template>

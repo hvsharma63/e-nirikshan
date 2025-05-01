@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\DeficiencyController as AdminDeficiencyController;
 use App\Http\Controllers\Admin\InspectionController as AdminInspectionController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Deficiency\DeficiencyController;
+use App\Http\Controllers\Officer\DeficiencyController as OfficerDeficiencyController;
 use App\Http\Controllers\Officer\InspectionController as OfficerInspectionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,14 +39,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/branch-officers', [RegisteredUserController::class,'listBranchOfficers'])
                 ->middleware(['permissions:list-users'])
                 ->name('list-branch-officers');
-
-            Route::get('{userId}/inspections/{inspectionId}/view-note', [AdminInspectionController::class, 'viewNote'])
-                ->middleware([ 'roles:admin', 'permissions:view-inspection-note'])
-                ->name('inspections.view-note');
-        
-            Route::get('/{userId}/inspections/{inspectionId}/download-note', [AdminInspectionController::class, 'downloadNote'])
-                ->middleware([ 'roles:admin', 'permissions:download-inspection-note'])
-                ->name('inspections.download-note');
     });
     
     // Officer routes
@@ -83,6 +77,31 @@ Route::middleware(['auth'])->group(function () {
                         ->middleware(['permissions:download-inspection-note'])
                         ->name('download-note');
             });
+
+            Route::prefix('deficiencies')
+                ->name('deficiencies.')
+                ->group(function () {
+                    Route::get('/', [OfficerDeficiencyController::class, 'index'])
+                        ->name('index');
+                    
+                    Route::get('/list', [OfficerDeficiencyController::class, 'list'])
+                        ->name('list');
+                    
+                    Route::get('/{id}', [OfficerDeficiencyController::class, 'view'])
+                        ->name('view');
+                    
+                    Route::get('/{id}/view-note', [OfficerDeficiencyController::class, 'viewNote'])
+                        ->name('view-note');
+                    
+                    Route::get('/{id}/download-note', [OfficerDeficiencyController::class, 'downloadNote'])
+                        ->name('download-note');
+                    
+                    Route::post('/{id}/remind', [OfficerDeficiencyController::class, 'remind'])
+                        ->name('remind');
+                    
+                    Route::post('/{id}/attend', [OfficerDeficiencyController::class, 'attend'])
+                        ->name('attend');
+            });
     });
 
     // Admin routes
@@ -107,23 +126,41 @@ Route::middleware(['auth'])->group(function () {
                     ->name('view');
         });
 
+        Route::prefix('deficiencies')
+            ->name('deficiencies.')
+            ->group(function () {
+                Route::get('/', [AdminDeficiencyController::class, 'index'])
+                    ->name('index');
 
+                Route::get('/list', [AdminDeficiencyController::class, 'list'])
+                    ->name('list');
 
+                Route::get('/{id}', [AdminDeficiencyController::class, 'view'])
+                    ->name('view');
+        });
+
+        Route::prefix('users')
+            ->name('users.')
+            ->group(function () {
+                Route::get('', [UserController::class, 'index'])
+                    ->name('index');
+
+                Route::get('list', [UserController::class, 'list'])
+                    ->name('list');
+                
+                Route::get('/{userId}/details', [UserController::class, 'details'])
+                    ->name('details');
+
+                Route::get('/{userId}/inspections/{inspectionId}/view-note', [AdminInspectionController::class, 'viewNote'])
+                    ->middleware(['permissions:view-inspection-note'])
+                    ->name('inspections.view-note');
+        
+                Route::get('/{userId}/inspections/{inspectionId}/download-note', [AdminInspectionController::class, 'downloadNote'])
+                    ->middleware(['permissions:download-inspection-note'])
+                    ->name('inspections.download-note');
+        });
     });
 
-
-    // Deficiencies routes
-    Route::prefix('deficiencies')
-        ->name('deficiencies.')
-        ->group(function () {
-            Route::get('/', [DeficiencyController::class, 'index'])->name('index');
-            Route::get('/list', [DeficiencyController::class, 'list'])->name('list');
-            Route::get('/{id}', [DeficiencyController::class, 'view'])->name('view');
-            Route::get('/{id}/view-note', [DeficiencyController::class, 'viewNote'])->name('view-note');
-            Route::get('/{id}/download-note', [DeficiencyController::class, 'downloadNote'])->name('download-note');
-            Route::post('/{id}/remind', [DeficiencyController::class, 'remind'])->name('remind');
-            Route::post('/{id}/attend', [DeficiencyController::class, 'attend'])->name('attend');
-    });
 });
 
 require __DIR__.'/settings.php';
