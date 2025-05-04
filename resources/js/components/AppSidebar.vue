@@ -29,19 +29,19 @@ const adminNavItems: (NavItem & { permission?: string })[] = [
         title: 'All Inspections',
         href: '/admin/inspections',
         icon: ScrollText,
-        permission: 'view-all-index-inspections',
+        permission: 'view-all-inspections',
     },
     {
         title: 'All Deficiencies',
         href: '/admin/deficiencies',
         icon: CalendarClock,
-        permission: 'view-all-index-inspections',
+        permission: 'view-all-deficiencies',
     },
     {
         title: 'All Users',
         href: '/admin/users',
         icon: Users,
-        permission: 'view-all-index-inspections',
+        permission: 'view-all-users',
     },
 ];
 
@@ -51,13 +51,13 @@ const officerNavItems: (NavItem & { permission?: string })[] = [
         title: 'My Inspections',
         href: '/inspections',
         icon: ScrollText,
-        permission: 'view-inspections',
+        permission: 'view-own-inspections',
     },
     {
         title: 'Received Deficiencies',
         href: '/deficiencies',
         icon: CalendarClock,
-        permission: 'view-deficiencies',
+        permission: 'view-own-deficiencies',
     },
 ];
 

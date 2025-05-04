@@ -51,7 +51,7 @@ class DeficiencyController extends Controller
         
         dispatch(new SendDeficiencyNotificationJob($deficiency));
         
-        return Redirect::route('officers.inspections.view', ['id' => $id])
+        return Redirect::route('officer.inspections.view', ['id' => $id])
             ->with('success', "Reminder Sent Successfully");
     }
 
@@ -64,7 +64,7 @@ class DeficiencyController extends Controller
             
             DB::commit();
             
-            return Redirect::route('officers.deficiencies.view', ['id' => $id])
+            return Redirect::route('officer.deficiencies.view', ['id' => $id])
                 ->with('success', "Deficiency Attended Successfully");
             
         } catch (\Throwable $th) {

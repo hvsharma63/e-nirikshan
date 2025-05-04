@@ -45,7 +45,7 @@ class InspectionController extends Controller
             $this->inspectionService->createInspection($validatedData);
             DB::commit();
             $action = $validatedData['is_draft'] ? 'saved' : 'created';
-            return Redirect::route('officers.inspections.index')->with('success', "Inspection $action successfully");
+            return Redirect::route('officer.inspections.index')->with('success', "Inspection $action successfully");
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

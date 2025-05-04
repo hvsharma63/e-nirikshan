@@ -61,7 +61,7 @@ const removeDeficiency = (index: number) => {
 
 const submit = (type: 'draft' | 'create') => {
     form.is_draft = type === 'draft';
-    form.post(route('officers.inspections.save'), {
+    form.post(route('officer.inspections.save'), {
         preserveScroll: true,
     });
 };

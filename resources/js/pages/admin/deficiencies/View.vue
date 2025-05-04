@@ -17,11 +17,11 @@ const deficiency: ViewDeficiency = (page.props.deficiency as { data: ViewDeficie
 
 // Remove form-related code and keep only view functions
 const viewNote = () => {
-    window.open(route('officers.deficiencies.view-note', deficiency.inspection_id), '_blank');
+    window.open(route('officer.deficiencies.view-note', deficiency.inspection_id), '_blank');
 };
 
 const downloadNote = () => {
-    window.open(route('officers.deficiencies.download-note', deficiency.inspection_id), '_blank');
+    window.open(route('officer.deficiencies.download-note', deficiency.inspection_id), '_blank');
 };
 
 const getStatusColor = (deficiency: ViewDeficiency) => {

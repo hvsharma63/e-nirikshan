@@ -6,47 +6,56 @@ use BenSampo\Enum\Enum;
 
 final class PermissionEnum extends Enum
 {
-    const VIEW_INDEX = 'view-index';
-    const VIEW = 'view';
-    const CREATE = 'create';
-    const REMIND = 'send-reminder';
-    const attend = 'attend';
-    const download = 'download';
+    // CORE ACTIONS - own vs. all
+    const LIST_OWN    = 'list-own';
+    const VIEW_OWN    = 'view-own';
+    const DOWNLOAD_OWN    = 'download-own';
+    const CREATE_OWN  = 'create-own';
+    const EDIT_OWN    = 'edit-own';
 
-    const VIEW_ALL_INDEX = 'view-all-index';
+    const LIST_ALL    = 'list-all';
+    const VIEW_ALL    = 'view-all';
+    const DOWNLOAD_ALL    = 'download-all';
+    const CREATE_ALL  = 'create-all';
+    const EDIT_ALL    = 'edit-all';
 
-    public static function viewIndexPermissionFor(ModuleEnum $module): string
-    {
-        return self::VIEW_INDEX .'-'. $module->value;
-    }
+    // MISCELLANEOUS GLOBAL PERMISSIONS
+    const VIEW_DASHBOARD        = 'view-dashboard';
+    const VIEW_DASHBOARD_STATS  = 'view-dashboard-stats';
+    const LIST_USERS            = 'list-users';
 
-    public static function viewAllIndexPermissionFor(ModuleEnum $module): string
-    {
-        return self::VIEW_ALL_INDEX .'-'. $module->value;
-    }
+    const REMIND    = 'send-reminder';
+    const ATTEND    = 'attend';
+    const DOWNLOAD  = 'download';
 
-    public static function viewPermissionFor(ModuleEnum $module): string
-    {
-        return self::VIEW .'-'. $module->value;
-    }
+    //
+    // ——— Helpers for module-scoped permissions ———
+    //
 
-    public static function createPermissionFor(ModuleEnum $module): string
-    {
-        return self::CREATE .'-'. $module->value;
-    }
+    // Officer / own-data
+    public static function listOwn(ModuleEnum $m): string   { return self::LIST_OWN   . '-' . $m->value; }
+    public static function viewOwn(ModuleEnum $m): string   { return self::VIEW_OWN   . '-' . $m->value; }
+    public static function downloadOwn(ModuleEnum $m): string   { return self::DOWNLOAD_OWN   . '-' . $m->value; }
+    public static function createOwn(ModuleEnum $m): string { return self::CREATE_OWN . '-' . $m->value; }
+    public static function editOwn(ModuleEnum $m): string   { return self::EDIT_OWN   . '-' . $m->value; }
 
-    public static function remindPermissionFor(ModuleEnum $module): string
-    {
-        return self::REMIND .'-'. $module->value;
-    }
+    // Admin / all-data
+    public static function listAll(ModuleEnum $m): string   { return self::LIST_ALL   . '-' . $m->value; }
+    public static function viewAll(ModuleEnum $m): string   { return self::VIEW_ALL   . '-' . $m->value; }
+    public static function downloadAll(ModuleEnum $m): string   { return self::DOWNLOAD_ALL   . '-' . $m->value; }
+    public static function createAll(ModuleEnum $m): string { return self::CREATE_ALL . '-' . $m->value; }
+    public static function editAll(ModuleEnum $m): string   { return self::EDIT_ALL   . '-' . $m->value; }
 
-    public static function attendPermissionFor(ModuleEnum $module): string
-    {
-        return self::attend .'-'. $module->value;
-    }
+    // Miscellaneous (module-scoped)
+    public static function remind(ModuleEnum $m): string   { return self::REMIND   . '-' . $m->value; }
+    public static function attend(ModuleEnum $m): string   { return self::ATTEND   . '-' . $m->value; }
+    public static function download(ModuleEnum $m): string { return self::DOWNLOAD . '-' . $m->value; }
 
-    public static function downloadPermissionFor(ModuleEnum $module): string
-    {
-        return self::download .'-'. $module->value;
-    }
+    //
+    // ——— Global (no module) getters ———
+    //
+
+    public static function viewDashboard(): string       { return self::VIEW_DASHBOARD; }
+    public static function viewDashboardStats(): string  { return self::VIEW_DASHBOARD_STATS; }
+    public static function listUsers(): string           { return self::LIST_USERS; }
 }

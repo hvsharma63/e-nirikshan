@@ -44,7 +44,7 @@ const submitResponse = async (deficiencyId: number) => {
     if (isSubmitting.value) return;
     isSubmitting.value = true;
     try {
-        await deficiencyForm.post(route('officers.deficiencies.attend', {
+        await deficiencyForm.post(route('officer.deficiencies.attend', {
             'id': deficiencyId
         }), {
             onFinish: () => {
@@ -65,11 +65,11 @@ onMounted(() => {
 });
 
 const viewNote = () => {
-    window.open(route('officers.deficiencies.view-note', deficiency.inspection_id), '_blank');
+    window.open(route('officer.deficiencies.view-note', deficiency.inspection_id), '_blank');
 };
 
 const downloadNote = () => {
-    window.open(route('officers.deficiencies.download-note', deficiency.inspection_id), '_blank');
+    window.open(route('officer.deficiencies.download-note', deficiency.inspection_id), '_blank');
 };
 
 </script>

@@ -76,14 +76,14 @@ const isMobile = ref(checkIsMobile());
 
 const viewNote = () => {
     console.log('viewNote', inspection, inspection.id);
-    window.open(route('users.inspections.view-note', {
+    window.open(route('admin.notes.view', {
         'userId': inspection.attended_by.id,
         'inspectionId': inspection.id,
     }), '_blank');
 };
 
 const downloadNote = () => {
-    window.open(route('users.inspections.download-note', {
+    window.open(route('admin.notes.download', {
         'userId': inspection.attended_by.id,
         'inspectionId': inspection.id,
     }), '_blank');
@@ -225,7 +225,7 @@ onMounted(() => {
                                                             deficiency.pertains_to.name }}</span>
                                                         <span class="text-sm text-gray-500 block">{{
                                                             deficiency.pertains_to.active_designation.address_asc
-                                                            }}</span>
+                                                        }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-start gap-3">

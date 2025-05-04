@@ -65,11 +65,15 @@ class InspectionQueries {
 
     public function viewNoteByPertainingOfficer(int $inspectionId, int $userId): ?Inspection {
         return Inspection::query()
-            ->select(['id','location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
+            ->select(['id', 'location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
+            ->whereHas('deficiencies.pertainsTo', function ($query) use ($userId) {
+                $query->where('id', $userId);
+            })
             ->withOnly([
                 'attendedBy:id,name',
-                'deficiencies.pertainsTo' => function($query) use($userId) {
+                'deficiencies.pertainsTo' => function ($query) use ($userId) {
                     $query->select(['id', 'name'])
+                        ->where('id', $userId)
                         ->withOnly(['activeDesignation:id,user_id,address_asc']);
                 },
                 'deficiencies:inspection_id,pertains_to,note'

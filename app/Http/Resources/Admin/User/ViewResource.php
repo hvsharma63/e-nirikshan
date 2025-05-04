@@ -4,6 +4,7 @@ namespace App\Http\Resources\Admin\User;
 
 use App\Enums\DeficiencyStatusEnum;
 use App\Enums\InspectionStatusEnum;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ class ViewResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'dob' => $this->dob->format('d M Y'),
+            'dob' => Carbon::parse($this->dob)->format('d M Y'),
             'pf_no' => $this->pf_no,
             'mobile_no' => $this->mobile_no,
             'current_designation' => $this->activeDesignation,

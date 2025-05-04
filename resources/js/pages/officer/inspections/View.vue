@@ -75,11 +75,11 @@ const checkIsMobile = () => window.innerWidth < 768;
 const isMobile = ref(checkIsMobile());
 
 const viewNote = () => {
-    window.open(route('officers.inspections.view-note', inspection.id), '_blank');
+    window.open(route('officer.inspections.view-note', inspection.id), '_blank');
 };
 
 const downloadNote = () => {
-    window.open(route('officers.inspections.download-note', inspection.id), '_blank');
+    window.open(route('officer.inspections.download-note', inspection.id), '_blank');
 };
 
 onMounted(() => {
@@ -135,7 +135,7 @@ onMounted(() => {
                                 <span class="text-sm text-gray-500 flex items-center gap-2">
                                     <User class="w-4 h-4" />Attended By
                                 </span>
-                                <span class="text-lg">{{ inspection.attended_by }}</span>
+                                <span class="text-lg">{{ inspection.attended_by.name }}</span>
                             </div>
                         </div>
                     </div>

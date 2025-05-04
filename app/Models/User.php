@@ -52,7 +52,6 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
-            'dob' => 'datetime:d/m/Y',
         ];
     }
 
