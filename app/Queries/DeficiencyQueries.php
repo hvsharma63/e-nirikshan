@@ -32,7 +32,8 @@ class DeficiencyQueries {
         return Deficiency::query()
             ->withOnly([
                 'inspection:id,location,attended_by,datetime,day_period,status',
-                'inspection.attendedBy:id,name,designation',
+                'inspection.attendedBy:id,name',
+                'inspection.attendedBy.activeDesignation:id,user_id,designation_id,address_asc',
                 'comment:id,deficiency_id,comment_by,comment'
             ])
             ->select(['id', 'inspection_id','pertains_to', 'note', 'status','action_date', 'created_at'])

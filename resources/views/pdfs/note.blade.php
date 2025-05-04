@@ -3,11 +3,9 @@
 <head>
     <?php 
         use Carbon\Carbon; 
-        $designationInShort = explode('/', $inspection->attendedBy->designation);
-        $designationInShort = $designationInShort[0];
 
         $pertainsToList = $inspection->deficiencies->pluck('pertainsTo')->unique('id')->map(function ($pertainsTo) {
-            return $pertainsTo->designation;
+            return $pertainsTo->activeDesignation->address_asc;
         });
 
     ?>
@@ -36,20 +34,20 @@
 <body>
 
     <h2 align="center"><u>Inspection Note #{{ $inspection->id }}</u></h2>
-    <p style="text-align: center"><strong>Ambush Check By {{ $inspection->attendedBy->name }}, {{ $designationInShort }} </strong></p>
+    <p style="text-align: center"><strong>Ambush Check By {{ $inspection->attendedBy->name }}, {{ $inspection->attendedBy->activeDesignation->address_asc }} </strong></p>
 
     <p><strong>1. Location:</strong> {{ $inspection->location }}</p>
     <p><strong>2. Date of Inspection:</strong> {{  Carbon::parse($inspection->datetime)->format('d M Y') }}</p>
     <p><strong>3. Time of Inspection:</strong> {{  Carbon::parse($inspection->datetime)->format('H:i A') }}</p>
     <p><strong>3. Type of Inspection:</strong> Ambush Check</p>
-    <p><strong>4. Name and Designation of Inspecting Officer:</strong> {{ $inspection->attendedBy->name }}, {{ $designationInShort }}</p>
+    <p><strong>4. Name and Designation of Inspecting Officer:</strong> {{ $inspection->attendedBy->name }}, {{ $inspection->attendedBy->activeDesignation->address_asc }}</p>
 
     <div>
         <div><b>6. (Deficiencies / Observations / Abnormalities) Noted During Inspection</b></div>
         <ul>
             @foreach ($inspection->deficiencies as $deficiency)
                 <li style="margin-bottom: 15px;">
-                    <b>Pertains to:</b> {{ $deficiency->pertainsTo->name }}, {{ $deficiency->pertainsTo->designation }}<br>
+                    <b>Pertains to:</b> {{ $deficiency->pertainsTo->name }}, {{ $deficiency->pertainsTo->activeDesignation->address_asc }}<br>
                     <b>Note:</b>{{ $deficiency->note }} <br>
                 </li>
             @endforeach
@@ -59,7 +57,7 @@
     <div class="section footer" style="margin-top: 40px;">
 
         <div align="right" style="margin-top: 120px;">
-            <b>{{  $designationInShort }}</b>
+            <b>{{  $inspection->attendedBy->activeDesignation->address_asc }}</b>
         </div>
 
         <br><br>

@@ -29,9 +29,7 @@ class InspectionQueries {
             ->select(['id','location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
             ->withOnly([
                 'attendedBy:id,name',
-                'deficiencies.pertainsTo' => function($query) {
-                    $query->select(['id', 'name', 'designation']);
-                },
+                'deficiencies.pertainsTo.activeDesignation:id,user_id,address_asc',
                 'deficiencies.comment'
             ])
             ->where('attended_by', $userId)
@@ -42,10 +40,10 @@ class InspectionQueries {
         return Inspection::query()
             ->select(['id','location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
             ->withOnly([
-                'attendedBy:id,name,designation',
-                'deficiencies.pertainsTo' => function($query) {
-                    $query->select(['id', 'name', 'designation']);
-                },
+                'attendedBy:id,name',
+                'attendedBy.activeDesignation:id,user_id,address_asc',
+                'deficiencies.pertainsTo:id,name',
+                'deficiencies.pertainsTo.activeDesignation:id,user_id,address_asc',
                 'deficiencies:inspection_id,pertains_to,note'
             ])
             ->where('attended_by', $userId)
@@ -56,10 +54,10 @@ class InspectionQueries {
         return Inspection::query()
             ->select(['id','location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
             ->withOnly([
-                'attendedBy:id,name,designation',
+                'attendedBy:id,name',
                 'deficiencies.pertainsTo' => function($query) use($userId) {
-                    $query->select(['id', 'name', 'designation'])
-                    ->where('id', $userId);
+                    $query->select(['id', 'name'])
+                        ->withOnly(['activeDesignation:id,user_id,address_asc']);
                 },
                 'deficiencies:inspection_id,pertains_to,note'
             ])

@@ -1,0 +1,37 @@
+﻿short_name,full_name,level
+DRM,Divisional Railway Manager,0
+ADRM,Additional Divisional Railway Manager,0
+AOM,Assistant Operations Manager,2
+DOM,Divisional Operations Manager,1
+Sr.DOM,Senior Divisional Opertion Manager,1
+ADEE,Assistant Divisional Electrical Engineer,2
+DEE,Divisional Electrical Engineer,1
+Sr.DEE,Senior Divisional Electrical Engineer,1
+APO,Assistant Personnel Officer,2
+DPO,Divisional Personnel Officer,1
+Sr.DPO,Senior Divisional Personnel Officer,1
+AMM,Assistant Material Manager,2
+Sr.DMM,Senior Divisional Material Manager,1
+DMM,Divisional Material Manager,1
+Sr.DMO,Senior Divisional Medical Officer,1
+DMO,Senior Divisional Medical Officer,1
+ADEN,Assistant Divisional Engineer,2
+DEN,Divisional Engineer,1
+ACM,Assistant Commercial Manager,2
+DCM,Divisional Commercial Manager,1
+Sr.DCM,Senior Divisional Commercial Manager,1
+ADME,Assistant Divisional Mechanical Engineer,2
+DME,Divisional Mechanical Engineer,1
+Sr.DME,Senior Divisional Mechanical Engineer,1
+DSTE,Divisional Signal And Telecommunication Engineer,1
+Sr.DSTE,Senior Divisional Signal And Telecommunication Engineer,1
+ADSTE,Assitant Divisional Signal And Telecommunication Engineer,2
+DSC,Divisional Security Commissioner,1
+Sr.DSC,Senior Divisional Security Commissioner,1
+Sr.DEN,Senior Divisional Engineer,1
+ADEN,Assistant Divisional Engineer,2
+ADFM,Assistant Divisional Finance Manager,2
+Sr.DFM,Senior Divisional Finance Manager,1,
+ADSO,Assistant Divisional Safety Officer,2
+DSO,Divisional Safety Officer,1
+AEN,Assistant Engineer,2

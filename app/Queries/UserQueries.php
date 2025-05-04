@@ -3,6 +3,7 @@
 namespace App\Queries;
 
 use App\Models\User;
+use App\Enums\DesignationLevelEnum;
 use Illuminate\Support\Collection;
 
 class UserQueries {
@@ -16,10 +17,14 @@ class UserQueries {
             ->first('email'); 
     }
 
-    public function getUsers($loggedInUserId): Collection {  
+    public function getBranchOfficers($loggedInUserId): Collection {  
         return User::query()
+            ->with(['activeDesignation:id,user_id,designation_id,address_asc'])
+            ->whereHas('activeDesignation.designation', function($query) {
+                return $query->where('level', DesignationLevelEnum::BRANCH_OFFICER);
+            })
             ->where('id', '!=', $loggedInUserId)
-            ->select(['id', 'name', 'designation'])
+            ->select(['id', 'name'])
             ->get();   
     }
 }
