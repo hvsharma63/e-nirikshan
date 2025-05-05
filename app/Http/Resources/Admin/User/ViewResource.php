@@ -22,7 +22,7 @@ class ViewResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'dob' => Carbon::parse($this->dob)->format('d M Y'),
+            'dob' => Carbon::createFromFormat('d/m/Y', $this->dob)->format('d M Y'),
             'pf_no' => $this->pf_no,
             'mobile_no' => $this->mobile_no,
             'current_designation' => $this->activeDesignation,
