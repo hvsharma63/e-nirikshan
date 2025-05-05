@@ -8,7 +8,7 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 import { Toaster } from '@/components/ui/toast';
-import 'vue-select/dist/vue-select.css';
+import { createPinia } from 'pinia';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -24,23 +24,27 @@ declare module 'vite/client' {
 }
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const pinia = createPinia();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
+    resolve: (name) =>
+        resolvePageComponent(
+            `./pages/${name}.vue`,
+            import.meta.glob<DefineComponent>('./pages/**/*.vue')
+        ),
     setup({ el, App, props, plugin }) {
-        const app = createApp({ 
+        const app = createApp({
             render: () => [h(App, props), h(Toaster)],
         });
 
-        // Register vue-select component globally
         import('vue-select').then(({ default: vSelect }) => {
             app.component('v-select', vSelect);
+            app.use(plugin)
+                .use(pinia)
+                .use(ZiggyVue)
+                .mount(el);
         });
-
-        app.use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
     },
     progress: {
         color: '#4B5563',

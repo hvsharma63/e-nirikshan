@@ -13,11 +13,11 @@ This is a reminder to attend to the reported deficiencies that require your atte
 ## Deficiency Details
 
 **Location:** {{ $deficiency->inspection->location }}  
-**Reported On:** {{ $deficiency->created_at->format('d M Y, h:i A') }}  
+**Reported On:** {{ $deficiency->created_at->format('d M Y, H:i') }}  
 **Description:** {{ $deficiency->note }}
 @endcomponent
 
-@component('mail::button', ['url' => route('deficiencies.view', $deficiency->id), 'color' => 'primary'])
+@component('mail::button', ['url' => route('officer.deficiencies.view', $deficiency->id), 'color' => 'primary'])
 Attend to Deficiency
 @endcomponent
 

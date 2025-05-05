@@ -31,7 +31,6 @@ const form = useForm({
     name: user.name,
     email: user.email,
     mobile_no: user.mobile_no,
-    designation: user.designation,
 });
 
 const submit = () => {
@@ -69,18 +68,18 @@ onMounted(() => {
                     </div>
 
                     <div class="grid gap-2">
+                        <Label for="designation">Designation</Label>
+                        <Input id="designation" class="mt-1 block w-full" v-model="user.active_designation.address_asc"
+                            required disabled />
+                    </div>
+
+                    <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name"
                             placeholder="Full name" />
                         <InputError class="mt-2" :message="form.errors.name" />
                     </div>
 
-                    <div class="grid gap-2">
-                        <Label for="designation">Designation</Label>
-                        <Input id="designation" class="mt-1 block w-full" v-model="form.designation" required
-                            placeholder="Designation" />
-                        <InputError class="mt-2" :message="form.errors.designation" />
-                    </div>
 
                     <div class="grid gap-2">
                         <Label for="email">Email address</Label>

@@ -13,7 +13,7 @@ A new deficiency has been reported that requires your attention. Please review t
 ## Deficiency Details
 
 **Location:** {{ $deficiency->inspection->location }}  
-**Reported On:** {{ $deficiency->created_at->format('d M Y, h:i A') }}  
+**Reported On:** {{ $deficiency->created_at->format('d M Y, H:i') }}  
 **Description:** {{ $deficiency->note }}
 @endcomponent
 

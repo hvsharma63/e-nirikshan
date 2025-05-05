@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\InspectionStatusEnum;
 use App\Jobs\SendDeficiencyNotificationJob;
+use App\Models\Inspection;
 use App\Queries\InspectionQueries;
 
 class InspectionService {
@@ -28,13 +29,15 @@ class InspectionService {
             $deficiencies = $inspection->deficiencies()->createMany($deficiencies);
             
             foreach ($deficiencies as $deficiency) {
-                dispatch(new SendDeficiencyNotificationJob($deficiency));
+                dispatch(new SendDeficiencyNotificationJob($deficiency))->afterCommit();
             }            
         }
 
         return $inspection;
     }
 
-    public function get(int $inspectionId, int $userId) {
+    public function getNoteByInspectingOfficer(int $inspectionId, int $userId): ?Inspection {
+
+        return $this->inspectionQueries->viewNotePdfByInspectingOfficer($inspectionId, $userId);
     }
 }
