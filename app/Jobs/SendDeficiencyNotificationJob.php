@@ -23,6 +23,8 @@ class SendDeficiencyNotificationJob implements ShouldQueue
 
     public function handle(): void
     {
+        $this->deficiency->load('pertainsTo');
+
         if ($this->deficiency->pertainsTo) {
             $this->deficiency->pertainsTo->notify(new DeficiencyReportedNotification($this->deficiency));
         }
