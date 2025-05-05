@@ -49,9 +49,14 @@ const submitResponse = async (deficiencyId: number) => {
         }), {
             onFinish: () => {
                 isSubmitting.value = false;
+                // Manually handle state update
+                if (Object.keys(deficiencyForm.errors).length === 0) {
+                    // No errors, reload the page or update the view
+                    window.location.reload();
+                }
             },
             preserveScroll: true,
-            preserveState: false,
+            preserveState: true, // Always preserve state to show errors if they exist
             replace: true
         });
     } catch (error) {
