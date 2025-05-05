@@ -49,7 +49,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'All Deficiencies', href: '/admin/deficiencies' },
 ];
 const columns = [
-    { accessorKey: 'id', header: 'ID' },
     { accessorKey: 'location', header: 'Location' },
     { accessorKey: 'note', header: 'Note' },
     { accessorKey: 'attended_by', header: 'Inspector' },

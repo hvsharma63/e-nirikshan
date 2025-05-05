@@ -24,7 +24,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'All Users', href: '/admin/users' },
 ];
 const columns = [
-    { accessorKey: 'id', header: 'ID' },
     { accessorKey: 'name', header: 'Name' },
     { accessorKey: 'designation', header: 'Designation' },
     { accessorKey: 'mobile_no', header: 'Mobile No.' },

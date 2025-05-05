@@ -19,7 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 const page = usePage<SharedData>();
 const columns = [
-    { accessorKey: 'id', header: 'ID' },
     { accessorKey: 'location', header: 'Location' },
     { accessorKey: 'deficiencies_count', header: 'Total Deficiencies' },
     { accessorKey: 'date', header: 'Date' },

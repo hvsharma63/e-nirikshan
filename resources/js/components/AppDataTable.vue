@@ -23,6 +23,10 @@ const props = defineProps({
     emptyDescription: {
         type: String,
         default: 'Try adjusting your search or filters to find what you\'re looking for.'
+    },
+    showIndex: {
+        type: Boolean,
+        default: true
     }
 });
 
@@ -51,7 +55,15 @@ const scrollToTop = () => {
 const table = useVueTable({
     getCoreRowModel: getCoreRowModel(),
     data,
-    columns: [...(props.columns || []), { accessorKey: 'actions', header: 'Actions' }],
+    columns: [
+        ...(props.showIndex ? [{
+            id: 'index',
+            header: '#',
+            cell: (row: any) => (pagination.value.pageIndex * pagination.value.pageSize) + row.row.index + 1
+        }] : []),
+        ...(props.columns || []),
+        { accessorKey: 'actions', header: 'Actions' }
+    ],
     state: {
         pagination: pagination.value,
     },
@@ -139,6 +151,9 @@ const goToPage = (page: number) => {
                                     <div class="flex items-center gap-2 justify-end md:justify-start">
                                         <slot name="actions" :row="row.original"></slot>
                                     </div>
+                                </template>
+                                <template v-else-if="cell.column.id === 'index'">
+                                    {{ (pagination.pageIndex * pagination.pageSize) + row.index + 1 }}
                                 </template>
                                 <template v-else>
                                     {{ cell.getValue() }}
