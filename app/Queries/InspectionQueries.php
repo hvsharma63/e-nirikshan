@@ -69,13 +69,10 @@ class InspectionQueries {
             ->whereHas('deficiencies.pertainsTo', function ($query) use ($userId) {
                 $query->where('id', $userId);
             })
-            ->withOnly([
+            ->with([
                 'attendedBy:id,name',
-                'deficiencies.pertainsTo' => function ($query) use ($userId) {
-                    $query->select(['id', 'name'])
-                        ->where('id', $userId)
-                        ->withOnly(['activeDesignation:id,user_id,address_asc']);
-                },
+                'deficiencies.pertainsTo:id,name',
+                'deficiencies.pertainsTo.activeDesignation:id,user_id,address_asc',
                 'deficiencies:inspection_id,pertains_to,note'
             ])
             ->findOrFail($inspectionId);
