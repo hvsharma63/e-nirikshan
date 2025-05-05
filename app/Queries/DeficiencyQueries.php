@@ -10,7 +10,16 @@ use Illuminate\Support\Collection;
 
 class DeficiencyQueries {
 
+    public $fromDate = null;
+    public $toDate = null;
+
     public function __construct() {
+    }
+
+    public function setDateRange(Carbon $from, Carbon $to)
+    {
+        $this->fromDate = $from;
+        $this->toDate = $to;
     }
 
     public function list(int $userId): LengthAwarePaginator {
@@ -38,6 +47,22 @@ class DeficiencyQueries {
             ])
             ->select(['id', 'inspection_id','pertains_to', 'note', 'status','action_date', 'created_at'])
             ->where('pertains_to', $userId)
+            ->findOrFail($deficiencyId);
+    }
+
+    public function viewForAdmin(int $deficiencyId, ?int $userId = null): ?Deficiency {
+        return Deficiency::query()
+            ->withOnly([
+                'inspection:id,location,attended_by,datetime,day_period,status',
+                'inspection.attendedBy:id,name',
+                'inspection.attendedBy.activeDesignation:id,user_id,designation_id,address_asc',
+                'comment:id,deficiency_id,comment_by,comment',
+                'pertainsTo.activeDesignation:id,user_id,address_asc',
+            ])
+            ->select(['id', 'inspection_id','pertains_to', 'note', 'status','action_date', 'created_at'])
+            ->when($userId, function ($query) use ($userId) {
+                $query->where('pertains_to', $userId);
+            })
             ->findOrFail($deficiencyId);
     }
 
@@ -72,4 +97,67 @@ class DeficiencyQueries {
             ->where('status', DeficiencyStatusEnum::PENDING)
             ->get();
     }
+
+    public function getDeficienciesCount(): int {
+        return Deficiency::query()
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            })
+            ->count();
+    }
+
+    public function getPendingDeficienciesCount(): int {
+        return Deficiency::query()
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            })
+            ->where('status', DeficiencyStatusEnum::PENDING)
+            ->count();
+    }
+
+    public function getAttendedDeficienciesCount(): int {
+        return Deficiency::query()
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            })
+            ->where('status', DeficiencyStatusEnum::ATTENDED)
+            ->count();
+    }
+
+    public function listAll(
+        ?string $search,
+        ?string $inspectorId,
+        ?string $pertainingOfficerId
+        ): LengthAwarePaginator {
+        return Deficiency::query()
+            ->withOnly([
+                'inspection:id,location,attended_by,datetime',
+                'inspection.attendedBy:id,name',
+                'inspection.attendedBy.activeDesignation:id,user_id,address_asc',
+                'pertainsTo:id,name',
+                'pertainsTo.activeDesignation:id,user_id,address_asc'
+            ])
+            ->select(['id', 'inspection_id', 'note', 'pertains_to', 'action_date', 'status'])
+            ->when($search, function ($query) use ($search) {
+                $query->where('note', 'like', "%{$search}%")
+                    ->orWhereHas('inspection', function ($q) use ($search) {
+                        $q->where('location', 'like', "%{$search}%");
+                    });
+            })
+            ->when($inspectorId, function ($query) use ($inspectorId) {
+                $query->whereHas('inspection.attendedBy', function ($q) use ($inspectorId) {
+                    $q->where('id', $inspectorId);
+                });
+            })
+            ->when($pertainingOfficerId, function ($query) use ($pertainingOfficerId) {
+                $query->where('pertains_to', $pertainingOfficerId);
+            })
+            ->when($this->fromDate && $this->toDate, function ($query) {
+                $query->whereHas('inspection', function ($q) {
+                    $q->whereBetween('datetime', [$this->fromDate, $this->toDate]);
+                });
+            })
+            ->orderByDesc('created_at')
+            ->paginate(10);
+        }
 }

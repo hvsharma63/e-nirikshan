@@ -8,5 +8,6 @@ final class ModuleEnum extends Enum
 {
     const INSPECTIONS = 'inspections';
     const DEFICIENCIES = 'deficiencies';
+    const USERS = 'users';
     const INSPECTION_NOTE = 'inspection-note';
 }

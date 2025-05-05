@@ -38,7 +38,7 @@
 
     <p><strong>1. Location:</strong> {{ $inspection->location }}</p>
     <p><strong>2. Date of Inspection:</strong> {{  Carbon::parse($inspection->datetime)->format('d M Y') }}</p>
-    <p><strong>3. Time of Inspection:</strong> {{  Carbon::parse($inspection->datetime)->format('H:i A') }}</p>
+    <p><strong>3. Time of Inspection:</strong> {{  Carbon::parse($inspection->datetime)->format('H:i') }}</p>
     <p><strong>3. Type of Inspection:</strong> Ambush Check</p>
     <p><strong>4. Name and Designation of Inspecting Officer:</strong> {{ $inspection->attendedBy->name }}, {{ $inspection->attendedBy->activeDesignation->address_asc }}</p>
 

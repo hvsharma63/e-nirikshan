@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Database\Seeders;
 
@@ -22,36 +22,36 @@ use Spatie\Permission\Models\Role;
 
 class DesignationSeeder extends Seeder
 {
-    public $createdRoles = [];
-    public $createdPermissions = [];
-    /**
-     * Run the database seeds.
-     */
+    protected array $createdPermissionsForOfficer = [];
+    protected array $createdPermissionsForAdmin   = [];
+
     public function run(): void
     {
         try {
             Schema::disableForeignKeyConstraints();
 
-            // Truncate all tables in reverse order
-            User::truncate();
+            // Truncate order reversed to satisfy FKs
+            // User::truncate();
             UserDesignation::truncate();
             Station::truncate();
             DivisionDepartment::truncate();
             Department::truncate();
             Division::truncate();
             Zone::truncate();
-            
+
             Log::info('Starting data seeding...');
-            
+
             $this->seedZones();
             $this->seedDivisions();
             $this->seedDepartments();
             $this->seedPivotTable();
             $this->seedStations();
             $this->seedDesignations();
+
             $this->seedRoles();
             $this->seedPermissions();
             $this->assignPermissionsToRoles();
+
             $this->seedUsers();
 
             Schema::enableForeignKeyConstraints();
@@ -65,278 +65,285 @@ class DesignationSeeder extends Seeder
     private function seedZones(): void 
     {
         Log::info('Seeding zones...');
-        $heading = true;
-        $input_file = fopen(base_path("database/data/zones.csv"), "r");
-        
-        $zones = collect();
-        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE) {
-            if (!$heading) {
-                $zones->push([
-                    "id" => $record['2'],
-                    "full_name" => $record['0'],
-                    "short_name" => $record['1'],
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ]);
-            }
-            $heading = false;
-        }
-        fclose($input_file);
+        $csv = database_path('data/zones.csv');
+        if (! file_exists($csv)) return;
 
-        // Increase chunk size for better performance
-        $zones->chunk(5000)->each(function ($chunk) {
-            Zone::insert($chunk->toArray());
-        });
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows); // header
+
+        $zones = collect();
+        foreach ($rows as $r) {
+            $zones->push([
+                'id'         => $r[2],
+                'full_name'  => $r[0],
+                'short_name' => $r[1],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $zones->chunk(5000)->each(fn($chunk) => Zone::insert($chunk->toArray()));
         Log::info('Zones seeded successfully');
     }
 
     private function seedDivisions(): void
     {
         Log::info('Seeding divisions...');
-        $heading = true;
-        $input_file = fopen(base_path("database/data/divisions.csv"), "r");
+        $csv = database_path('data/divisions.csv');
+        if (! file_exists($csv)) return;
 
-        $divisions = collect();
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows);
 
-        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
-        {
-            if (!$heading)
-            {
-                $divisions->push([
-                    "id" => $record['2'],
-                    "full_name" => $record['0'],
-                    "short_name" => $record['1'],
-                    "zone_id" => $record['3'],
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ]);
-            }
-            $heading = false;
+        $divs = collect();
+        foreach ($rows as $r) {
+            $divs->push([
+                'id'         => $r[2],
+                'full_name'  => $r[0],
+                'short_name' => $r[1],
+                'zone_id'    => $r[3],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-        fclose($input_file);
 
-        $divisions->chunk(5000)->each(function ($chunk) {
-            Division::insert($chunk->toArray());
-        });
+        $divs->chunk(5000)->each(fn($c) => Division::insert($c->toArray()));
         Log::info('Divisions seeded successfully');
     }
 
     private function seedDepartments(): void
     {
         Log::info('Seeding departments...');
-        // Import data from CSV
-        $csvFile = database_path('data/departments.csv');
-        if (file_exists($csvFile)) {
-            $departments = array_map('str_getcsv', file($csvFile));
-            array_shift($departments); // Remove header row
-            
-            $departmentsCollection = collect();
+        $csv = database_path('data/departments.csv');
+        if (! file_exists($csv)) return;
 
-            foreach ($departments as $department) {
-                $departmentsCollection->push([
-                    'id' => $department[0],
-                    'full_name' => $department[1],
-                    'short_name' => $department[2],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows);
 
-            $departmentsCollection->chunk(5000)->each(function ($chunk) {
-                Department::insert($chunk->toArray());
-            });
+        $deps = collect();
+        foreach ($rows as $r) {
+            $deps->push([
+                'id'         => $r[0],
+                'full_name'  => $r[1],
+                'short_name' => $r[2],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
+
+        $deps->chunk(5000)->each(fn($c) => Department::insert($c->toArray()));
         Log::info('Departments seeded successfully');
     }
 
     private function seedPivotTable(): void
     {
         Log::info('Seeding division_departments pivot table...');
-        $heading = true;
-        $input_file = fopen(base_path("database/data/division_departments.csv"), "r");
+        $csv = database_path('data/division_departments.csv');
+        if (! file_exists($csv)) return;
 
-        $divisionDepartments = collect();
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows);
 
-        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
-        {
-            if (!$heading)
-            {
-                $divisionDepartments->push([
-                    "id" => $record['0'],
-                    "division_id" => $record['1'],
-                    "department_id" => $record['2'],
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ]);
-            }
-            $heading = false;
+        $pivots = collect();
+        foreach ($rows as $r) {
+            $pivots->push([
+                'id'                => $r[0],
+                'division_id'       => $r[1],
+                'department_id'     => $r[2],
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ]);
         }
-        fclose($input_file);
 
-        $divisionDepartments->chunk(5000)->each(function ($chunk) {
-            DB::table('division_departments')->insert($chunk->toArray());
-        });
+        $pivots->chunk(5000)->each(fn($c) => DB::table('division_departments')->insert($c->toArray()));
         Log::info('Division_departments pivot table seeded successfully');
     }
 
     private function seedStations(): void
     {
         Log::info('Seeding stations...');
-        $heading = true;
-        $input_file = fopen(base_path("database/data/stations.csv"), "r");
+        $csv = database_path('data/stations.csv');
+        if (! file_exists($csv)) return;
+
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows);
 
         $stations = collect();
-
-        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
-        {
-            if (!$heading)
-            {
-                $stations->push([
-                    "id" => $record['0'],
-                    "full_name" => $record['1'],
-                    "short_name" => $record['2'],
-                    "division_id" => $record['3'],
-                    "district" => $record['4'],
-                    "state" => $record['5'],
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ]);
-            }
-            $heading = false;
+        foreach ($rows as $r) {
+            $stations->push([
+                'id'          => $r[0],
+                'full_name'   => $r[1],
+                'short_name'  => $r[2],
+                'division_id' => $r[3],
+                'district'    => $r[4],
+                'state'       => $r[5],
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]);
         }
-        fclose($input_file);
 
-        $stations->chunk(5000)->each(function ($chunk) {
-            Station::insert($chunk->toArray());
-        });
+        $stations->chunk(5000)->each(fn($c) => Station::insert($c->toArray()));
         Log::info('Stations seeded successfully');
     }
 
     private function seedDesignations(): void
     {
         Log::info('Seeding designations...');
-        $heading = true;
-        $input_file = fopen(base_path("database/data/designations.csv"), "r");
+        $csv = database_path('data/designations.csv');
+        if (! file_exists($csv)) return;
+
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows);
 
         $designations = collect();
-
-        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
-        {
-            if (!$heading)
-            {
-                $designations->push([
-                    "short_name" => $record['0'],
-                    "full_name" => $record['1'],
-                    "level" => $record['2'],
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ]);
-            }
-            $heading = false;
+        foreach ($rows as $r) {
+            $designations->push([
+                'short_name' => $r[0],
+                'full_name'  => $r[1],
+                'level'      => $r[2],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-        fclose($input_file);
 
-        $designations->chunk(5000)->each(function ($chunk) {
-            Designation::insert($chunk->toArray());
-        });
+        $designations->chunk(5000)->each(fn($c) => Designation::insert($c->toArray()));
         Log::info('Designations seeded successfully');
     }
 
-    public function seedRoles() {
+    protected function seedRoles(): void
+    {
         Log::info('Seeding roles...');
-        $roles = RoleEnum::getValues();
-        foreach ($roles as $role) {
-            $createdRole = Role::create(['name' => $role, 'guard_name' => 'web']);
-            array_push($this->createdRoles, $createdRole);
+        foreach (RoleEnum::getValues() as $role) {
+            Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
         }
         Log::info('Roles seeded successfully');
     }
 
-    public function seedPermissions(): void {
-        Log::info('Seeding permissions...');
-        $permissions = collect([
-            PermissionEnum::viewIndexPermissionFor(ModuleEnum::INSPECTIONS()),
-            PermissionEnum::createPermissionFor(ModuleEnum::INSPECTIONS()),
-            PermissionEnum::viewPermissionFor(ModuleEnum::INSPECTIONS()),
-            PermissionEnum::remindPermissionFor(ModuleEnum::DEFICIENCIES()),
-            PermissionEnum::viewPermissionFor(ModuleEnum::INSPECTION_NOTE()),
-            PermissionEnum::downloadPermissionFor(ModuleEnum::INSPECTION_NOTE()),
-            PermissionEnum::viewPermissionFor(ModuleEnum::DEFICIENCIES()),
-            PermissionEnum::attendPermissionFor(ModuleEnum::DEFICIENCIES()),
+    protected function seedPermissions(): void
+    {
+        Log::info('Seeding permissions…');
+    
+        // Officer (own-data)
+        $officerPerms = collect([
+            // Inspections (own)
+            PermissionEnum::listOwn(ModuleEnum::INSPECTIONS()),
+            PermissionEnum::viewOwn(ModuleEnum::INSPECTIONS()),
+            PermissionEnum::createOwn(ModuleEnum::INSPECTIONS()),
+            PermissionEnum::editOwn(ModuleEnum::INSPECTIONS()),
+    
+            // Deficiencies (own)
+            PermissionEnum::listOwn(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::viewOwn(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::createOwn(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::editOwn(ModuleEnum::DEFICIENCIES()),
+    
+            // Misc. module-scoped
+            PermissionEnum::remind(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::attend(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::downloadOwn(ModuleEnum::INSPECTION_NOTE()),
+            PermissionEnum::viewOwn(ModuleEnum::INSPECTION_NOTE()),
+    
+            // Global
+            PermissionEnum::viewDashboard(),
+            PermissionEnum::listUsers(),
         ]);
-
-        $permissions->each(function ($permission) {
-            $createdPermission = Permission::create(['name' => $permission, 'guard_name' => 'web']);
-            array_push($this->createdPermissions, $createdPermission);
+    
+        $officerPerms->unique()->each(function (string $perm) {
+            $p = Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
+            $this->createdPermissionsForOfficer[] = $p;
         });
+    
+        // Admin (all-data)
+        $adminPerms = collect([
+            // Inspections (all)
+            PermissionEnum::listAll(ModuleEnum::INSPECTIONS()),
+            PermissionEnum::viewAll(ModuleEnum::INSPECTIONS()),
+            
+            // Deficiencies (all)
+            PermissionEnum::listAll(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::viewAll(ModuleEnum::DEFICIENCIES()),
+            
+            // Users (all)
+            PermissionEnum::listAll(ModuleEnum::USERS()),
+            PermissionEnum::viewAll(ModuleEnum::USERS()),
+            
+            // Inspection Notes (all)
+            PermissionEnum::viewAll(ModuleEnum::INSPECTION_NOTE()),
+            PermissionEnum::downloadAll(ModuleEnum::INSPECTION_NOTE()),
+
+            // Misc. module-scoped
+            PermissionEnum::remind(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::attend(ModuleEnum::DEFICIENCIES()),
+            PermissionEnum::download(ModuleEnum::INSPECTION_NOTE()),
+    
+            // Global
+            PermissionEnum::viewDashboard(),
+            PermissionEnum::viewDashboardStats(),
+        ]);
+    
+        $adminPerms->unique()->each(function (string $perm) {
+            $p = Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
+            $this->createdPermissionsForAdmin[] = $p;
+        });
+    
         Log::info('Permissions seeded successfully');
     }
+    
 
-    public function assignPermissionsToRoles() {
-        Log::info('Assigning permissions to roles...');
-        foreach ($this->createdRoles as $role) {
-           $role->givePermissionTo($this->createdPermissions);
+    protected function assignPermissionsToRoles(): void
+    {
+        Log::info('Assigning permissions to roles…');
+
+        $officer = Role::where('name', RoleEnum::OFFICER)->first();
+        $admin   = Role::where('name', RoleEnum::ADMIN)->first();
+
+        if ($officer) {
+            $officer->syncPermissions($this->createdPermissionsForOfficer);
         }
-        Log::info('Permissions assigned to roles successfully');
+
+        if ($admin) {
+            $admin->syncPermissions($this->createdPermissionsForAdmin);
+        }
+
+        Log::info('Permissions assigned successfully');
     }
 
-    public function seedUsers() {
+    private function seedUsers(): void
+    {
         Log::info('Seeding users...');
-        $heading = true;
-        $input_file = fopen(base_path("database/data/users.csv"), "r");
+        $csv = database_path('data/users.csv');
+        if (! file_exists($csv)) return;
 
-        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
-        {
-            if (!$heading)
-            {
-                $user = [
-                    "name" => $record['0'],
-                    "email" => $record['1'],
-                    "password" => $record['2'],
-                    "dob"=> $record['4'],
-                    "mobile_no" => $record['5'],
-                    "pf_no" => $record['6'],
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ];
-                $designationBreakdown = explode("/", $record['3']);
-                
-                $post = Designation::query()
-                    ->where('short_name', $designationBreakdown[0])
-                    ->first();
+        $rows = array_map('str_getcsv', file($csv));
+        array_shift($rows);
 
-                $divDept = DivisionDepartment::query()
-                    ->with(['department:id,short_name', 'division:id,short_name'])
-                    ->whereRelation('department', 'short_name', $designationBreakdown[1])
-                    ->whereRelation('division', 'short_name', 'RJT')
-                    ->first();
+        $users = User::select(['id','pf_no'])
+            ->with(['userDesignations', 'roles'])
+            ->get()
+            ->keyBy('pf_no');
 
-                
-                $station = Station::query()
-                    ->with('division:id,short_name')
-                    ->whereRelation('division', 'short_name', 'RJT')
-                    ->where('short_name', $designationBreakdown[2])
-                    ->first();
+        foreach ($rows as $r) {
+            $user = $users[$r[6]];
+            $designationParts = explode('/', $r[3]);
+            $post = Designation::where('short_name', $designationParts[0])->first();
+            $divDept = DivisionDepartment::whereHas('division', fn($q)=> $q->where('short_name','RJT'))
+                         ->whereHas('department', fn($q)=> $q->where('short_name',$designationParts[1]))
+                         ->first();
+            $station = Station::whereHas('division', fn($q)=> $q->where('short_name','RJT'))
+                         ->where('short_name',$designationParts[2])
+                         ->first();
 
-                Log::info("User: ", $user); 
-                $userDesignation = [
-                    "division_departments_id" => $divDept->id,
-                    "station_id" => $station->id,
-                    "designation_id" => $post->id,
-                    "address_asc" => $record['3'],
-                    "is_active" => true,
-                ];
+            $user->userDesignations()->create([
+                'division_departments_id' => $divDept->id,
+                'station_id'              => $station->id,
+                'designation_id'          => $post->id,
+                'address_asc'             => $r[3],
+                'is_active'               => true,
+            ]);
 
-                $userDesignation = new UserDesignation($userDesignation);
-                $createdUser = User::create($user);
-                $createdUser->userDesignations()->save($userDesignation);
-
-                $createdUser->assignRole(RoleEnum::OFFICER);
-
-            }
-            $heading = false;
+            $user->assignRole(RoleEnum::OFFICER);
         }
-        fclose($input_file);
+
         Log::info('Users seeded successfully');
     }
 }
