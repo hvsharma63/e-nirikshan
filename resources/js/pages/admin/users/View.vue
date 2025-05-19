@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { Head, usePage, router } from '@inertiajs/vue3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -138,7 +138,7 @@ const goToDeficiency = (id: number) => {
                                 <div>
                                     <div class="text-2xl font-bold text-primary">{{ user.inspection_statistics.completed
                                         ?? 0
-                                    }}
+                                        }}
                                     </div>
                                     <p class="text-xs text-muted-foreground">Completed</p>
                                 </div>
@@ -150,7 +150,7 @@ const goToDeficiency = (id: number) => {
                                 <div>
                                     <div class="text-2xl font-bold text-foreground">{{ user.inspection_statistics.total
                                         ?? 0
-                                    }}
+                                        }}
                                     </div>
                                     <p class="text-xs text-muted-foreground">Total</p>
                                 </div>
@@ -171,27 +171,27 @@ const goToDeficiency = (id: number) => {
                                 <div>
                                     <div class="text-2xl font-bold text-primary">{{ user.deficiency_statistics.attended
                                         ?? 0
-                                    }}
+                                        }}
                                     </div>
                                     <p class="text-xs text-muted-foreground">Attended</p>
                                 </div>
                                 <div>
                                     <div class="text-2xl font-bold text-yellow-600">{{ user.deficiency_statistics.seen
                                         ?? 0
-                                    }}
+                                        }}
                                     </div>
                                     <p class="text-xs text-muted-foreground">Seen</p>
                                 </div>
                                 <div>
                                     <div class="text-2xl font-bold text-destructive">{{
                                         user.deficiency_statistics.pending ?? 0
-                                    }}</div>
+                                        }}</div>
                                     <p class="text-xs text-muted-foreground">Pending</p>
                                 </div>
                                 <div>
                                     <div class="text-2xl font-bold text-foreground">{{ user.deficiency_statistics.total
                                         ?? 0
-                                    }}
+                                        }}
                                     </div>
                                     <p class="text-xs text-muted-foreground">Total</p>
                                 </div>

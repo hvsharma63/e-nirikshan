@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { DropdownItem, SharedData, type BreadcrumbItem } from '@/types';
+import { SharedData, type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { Eye } from 'lucide-vue-next';
 import AppDataTable from '@/components/AppDataTable.vue';

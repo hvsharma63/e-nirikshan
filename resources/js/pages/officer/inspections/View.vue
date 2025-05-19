@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -13,7 +13,6 @@ import {
     Calendar,
     Sun,
     User,
-    Building2,
     ClipboardList
 } from 'lucide-vue-next';
 import {
@@ -222,7 +221,7 @@ onMounted(() => {
                                                             deficiency.pertains_to.name }}</span>
                                                         <span class="text-sm text-gray-500 block">{{
                                                             deficiency.pertains_to.active_designation.address_asc
-                                                        }}</span>
+                                                            }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-start gap-3">
