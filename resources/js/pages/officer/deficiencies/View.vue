@@ -10,6 +10,7 @@ import { AlertCircle, CheckCircle, Clock, MapPin, User, Calendar, MessageSquare,
 import { SharedData, ViewDeficiency } from '@/types';
 import { onMounted } from 'vue';
 import InputError from '@/components/InputError.vue';
+import Gallery from '@/components/ui/images/Gallery.vue';
 
 const breadcrumbs = [
     { title: 'Received Deficiencies', href: '/deficiencies' },
@@ -165,6 +166,9 @@ const downloadNote = () => {
                             <div class="flex items-start gap-3">
                                 <div class="flex-1">
                                     <p class="text-gray-700 whitespace-pre-line">{{ deficiency.note }}</p>
+                                    <div class="gallery-wrapper">
+                                        <Gallery :images="deficiency.media || []" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -244,3 +248,15 @@ const downloadNote = () => {
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+.gallery-wrapper :deep(.grid) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.gallery-wrapper :deep(.aspect-square) {
+    max-width: 200px;
+    max-height: 200px;
+}
+</style>

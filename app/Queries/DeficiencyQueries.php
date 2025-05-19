@@ -43,7 +43,8 @@ class DeficiencyQueries {
                 'inspection:id,location,attended_by,datetime,day_period,status',
                 'inspection.attendedBy:id,name',
                 'inspection.attendedBy.activeDesignation:id,user_id,designation_id,address_asc',
-                'comment:id,deficiency_id,comment_by,comment'
+                'comment:id,deficiency_id,comment_by,comment',
+                'media',
             ])
             ->select(['id', 'inspection_id','pertains_to', 'note', 'status','action_date', 'created_at'])
             ->where('pertains_to', $userId)
@@ -58,6 +59,7 @@ class DeficiencyQueries {
                 'inspection.attendedBy.activeDesignation:id,user_id,designation_id,address_asc',
                 'comment:id,deficiency_id,comment_by,comment',
                 'pertainsTo.activeDesignation:id,user_id,address_asc',
+                'media',
             ])
             ->select(['id', 'inspection_id','pertains_to', 'note', 'status','action_date', 'created_at'])
             ->when($userId, function ($query) use ($userId) {

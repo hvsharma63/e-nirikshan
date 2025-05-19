@@ -5,6 +5,7 @@ import Button from '@/components/ui/button/Button.vue';
 import { AlertCircle, CheckCircle, Clock, MapPin, User, Calendar, MessageSquare, CalendarCheck, ClipboardList } from 'lucide-vue-next';
 import { SharedData, ViewDeficiency } from '@/types';
 import { onMounted } from 'vue';
+import Gallery from '@/components/ui/images/Gallery.vue';
 
 const breadcrumbs = [
     { title: 'All Deficiencies', href: '/admin/deficiencies' },
@@ -170,6 +171,9 @@ onMounted(() => {
                             <div class="flex items-start gap-3">
                                 <div class="flex-1">
                                     <p class="text-gray-700 whitespace-pre-line">{{ deficiency.note }}</p>
+                                    <div class="gallery-wrapper">
+                                        <Gallery :images="deficiency.media || []" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,3 +223,14 @@ onMounted(() => {
         </div>
     </AppLayout>
 </template>
+<style scoped>
+.gallery-wrapper :deep(.grid) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.gallery-wrapper :deep(.aspect-square) {
+    max-width: 200px;
+    max-height: 200px;
+}
+</style>
