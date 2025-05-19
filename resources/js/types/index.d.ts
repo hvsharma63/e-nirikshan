@@ -92,6 +92,7 @@ export interface ItemDeficiency {
     is_seen: boolean;
     is_attended: boolean;
     comment_by_pertaining_officer: string;
+    media: Array;
 }
 
 export interface ItemDeficiencyPertainsTo {
@@ -182,6 +183,26 @@ export interface RecentDeficiency {
     date: string;
     note: string;
     status: string;
+}
+
+export interface CreateInspectionDeficiencyItem {
+    note: ?string;
+    pertains_to: ?number,
+    images: File[],
+    temporary_upload_uuid: null
+}
+
+export interface CreateInspectionForm {
+    location: string;
+    datetime: string;
+    is_draft: boolean;
+    attended_by: string;
+    attended_by_id: number;
+    day_period: string;
+    deficiencies: CreateInspectionDeficiencyItem[];
+    completed: boolean;
+    no_deficiencies_found: boolean;
+    [key: string]: any; // Add index signature to satisfy FormDataType
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

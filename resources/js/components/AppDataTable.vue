@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import apiService from '@/services/apiService';
 import { useVueTable, getCoreRowModel, type ColumnDef } from '@tanstack/vue-table';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-vue-next';
 import AppPagination from './AppPagination.vue';
 

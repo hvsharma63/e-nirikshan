@@ -7,5 +7,5 @@ export function toastSuccess(message: string) {
 }
 
 export function toastError(message: string) {
-    toast({ title: message, variant: 'destructive' });
+    toast({ title: message, variant: 'error' });
 }

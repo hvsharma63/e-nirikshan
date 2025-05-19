@@ -32,7 +32,10 @@ class InspectionCreateRequest extends FormRequest
             'no_deficiencies_found' => ['required', 'boolean'],
             'deficiencies' => ['required_if:no_deficiencies_found,false', 'array'],
             'deficiencies.*.note' => ['required', 'string'],
-            'deficiencies.*.pertains_to' => ['required']
+            'deficiencies.*.images' => ['array'],
+            'deficiencies.*.images.*' => ['file', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'deficiencies.*.pertains_to' => ['required'],
+            'deficiencies.*.temporary_upload_uuid' => ['nullable', 'uuid', 'exists:temporary_uploads,uuid'],
         ];
     }
 
@@ -43,6 +46,7 @@ class InspectionCreateRequest extends FormRequest
             'deficiencies.required_if' => 'The deficiency field is required.',
             'deficiencies.*.note'=> 'Please mention the deficiency note.',
             'deficiencies.*.pertains_to'=> 'Please select an officer.',
+            'deficiencies.*.images.*.max' => 'Selected Image #:second-position may not be greater than 2MB.',
         ];
     }
 

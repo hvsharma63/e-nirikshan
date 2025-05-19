@@ -4,7 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollText, NotebookTextIcon, AlertCircle, CheckCircle } from 'lucide-vue-next';
-import { ref, computed, watch } from 'vue';
+import { ref } from 'vue';
 import {
     Select,
     SelectContent,
