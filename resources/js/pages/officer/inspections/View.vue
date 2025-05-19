@@ -25,6 +25,7 @@ import {
 import type { SharedData, ViewInspection, ItemDeficiency } from '@/types';
 import apiService from '@/services/apiService';
 import { toast } from '@/components/ui/toast';
+import ImageGallery from '@/components/ui/images/Gallery.vue';
 
 const breadcrumbs = [
     {
@@ -199,6 +200,9 @@ onMounted(() => {
                                             <p class="text-gray-700">
                                                 {{ deficiency.note }}
                                             </p>
+
+                                            <ImageGallery :images="deficiency.media || []" />
+
                                             <div class="mt-3 text-sm text-gray-500">
                                                 Inspected on {{ deficiency.reported_on }}
                                             </div>
@@ -322,6 +326,7 @@ onMounted(() => {
             </Card>
         </div>
     </AppLayout>
+
 </template>
 
 <style scoped>

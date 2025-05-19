@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\InspectionController as AdminInspectionController
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Officer\DeficiencyController as OfficerDeficiencyController;
 use App\Http\Controllers\Officer\InspectionController as OfficerInspectionController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,24 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    
+    //
+    // Media Upload
+    //
+    Route::prefix('media')
+        ->name('media.')
+        ->group(function () {
+
+            Route::post('/upload-temporarily', [MediaController::class, 'uploadTemporarily'])
+                ->name('upload-temporarily');
+        
+       
+            Route::get('{media}/view', [MediaController::class, 'view'])
+                ->middleware('signed') // validates temp signed URL
+                ->name('view');
+        });
+    
+
     //
     // Dashboard
     //

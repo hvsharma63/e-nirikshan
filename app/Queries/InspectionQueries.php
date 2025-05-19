@@ -2,8 +2,10 @@
 
 namespace App\Queries;
 
+use App\Models\Deficiency;
 use App\Models\Inspection;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class InspectionQueries {
@@ -41,7 +43,8 @@ class InspectionQueries {
             ->withOnly([
                 'attendedBy:id,name',
                 'deficiencies.pertainsTo.activeDesignation:id,user_id,address_asc',
-                'deficiencies.comment'
+                'deficiencies.comment',
+                'deficiencies.media',
             ])
             ->when($userId, function ($query) use ($userId) {
                 $query->where('attended_by', $userId);
@@ -132,5 +135,16 @@ class InspectionQueries {
         }
 
         return $query->paginate(10);
+    }
+
+    /**
+     * Create multiple deficiencies for the given inspection.
+     *
+     * @param Inspection $inspection The inspection instance to associate deficiencies with.
+     * @param array $deficiencies An array of deficiency data to be created.
+     * @return \Illuminate\Support\Collection<\App\Models\Deficiency> Collection of created Deficiency models.
+     */
+    public function createManyDeficiencies(Inspection $inspection, array $deficiencies): Collection {
+        return $inspection->deficiencies()->createMany($deficiencies);
     }
 }

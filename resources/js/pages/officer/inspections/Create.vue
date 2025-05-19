@@ -14,7 +14,9 @@ import { ref, onMounted } from 'vue';
 import apiService from '@/services/apiService';
 import 'vue-select/dist/vue-select.css';
 import { Checkbox } from '@/components/ui/checkbox';
-import vSelect from 'vue-select'
+import vSelect from 'vue-select';
+import ImageUpload from '@/components/ui/images/Upload.vue';
+import { toastError } from '@/services/toasterService';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,6 +39,14 @@ const getCurrentDateTime = () => {
         .slice(0, 16);
 };
 
+const createDeficiency = () => ({
+    note: '',
+    pertains_to: null,
+    temporary_upload_uuid: null,
+    has_unuploaded_images: false,
+    has_images: false
+});
+
 const form = useForm({
     location: '',
     datetime: getCurrentDateTime(),
@@ -44,7 +54,7 @@ const form = useForm({
     attended_by: user.name,
     attended_by_id: user.id,
     day_period: '',
-    deficiencies: [{ note: '', pertains_to: null }],
+    deficiencies: [createDeficiency()],
     completed: false,
     no_deficiencies_found: false,
 });
@@ -52,14 +62,28 @@ const form = useForm({
 const users = ref<{ name: string; value: number; }[]>([]);
 
 const addDeficiency = () => {
-    form.deficiencies.push({ note: '', pertains_to: null });
+    form.deficiencies.push(createDeficiency());
 };
 
 const removeDeficiency = (index: number) => {
     form.deficiencies.splice(index, 1);
 };
 
+const validateImages = () => {
+    const hasUnuploadedImages = form.deficiencies.some(d => d.has_images && d.has_unuploaded_images);
+
+    if (hasUnuploadedImages) {
+        toastError('Please upload all images or remove failed uploads before proceeding');
+        return false;
+    }
+    return true;
+};
+
 const submit = (type: 'draft' | 'create') => {
+    if (!validateImages()) {
+        return;
+    }
+
     form.is_draft = type === 'draft';
     form.post(route('officer.inspections.save'), {
         preserveScroll: true,
@@ -134,6 +158,24 @@ onMounted(() => {
                                                 :message="(form.errors as Record<string, string>)[`deficiencies.${index}.note`]" />
                                         </div>
                                         <div class="space-y-2 mt-4">
+                                            <Label>Images</Label>
+                                            <div class="space-y-4">
+                                                <ImageUpload :temporaryUuid="deficiency.temporary_upload_uuid"
+                                                    :deficiency-id="index" @uploadStatusChange="(status) => {
+                                                        deficiency.has_unuploaded_images = status.hasUnuploadedImages;
+                                                        deficiency.has_images = status.hasImages;
+                                                    }"
+                                                    @uuidAssigned="(uuid) => deficiency.temporary_upload_uuid = uuid" />
+                                                <p v-if="!deficiency.temporary_upload_uuid"
+                                                    class="text-sm text-muted-foreground">
+                                                    Upload images related to this deficiency
+                                                </p>
+                                                <p v-else class="text-sm text-green-600">
+                                                    Images uploaded successfully
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2 mt-4">
                                             <Label :for="`deficiency_user_${index}`">Pertains To</Label>
                                             <v-select v-model="deficiency.pertains_to" :options="users"
                                                 :reduce="(user: any) => user.value"
@@ -177,7 +219,6 @@ onMounted(() => {
                             </div>
                             <!-- End of Deficiencies Section -->
                         </div>
-
 
                         <div class="flex justify-end gap-2">
                             <!-- <Button type="button" class="btn-secondary w-full sm:w-auto" :disabled="form.processing"
