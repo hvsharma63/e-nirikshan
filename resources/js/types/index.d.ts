@@ -134,6 +134,7 @@ export interface ViewDeficiency {
     comment: string;
     deficiency_created_at: string;
     deficiency_status: string;
+    media: Array;
 }
 
 export interface DropdownItem {
