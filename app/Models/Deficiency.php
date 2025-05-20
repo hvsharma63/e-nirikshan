@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\DeficiencyStatusEnum;
@@ -14,7 +16,7 @@ class Deficiency extends Model implements HasMedia
 {
     use Notifiable;
     use InteractsWithMedia;
-    
+
     protected $fillable = [
         'inspection_id' ,
         'pertains_to',
@@ -43,15 +45,18 @@ class Deficiency extends Model implements HasMedia
         return $this->status->value === DeficiencyStatusEnum::ATTENDED;
     }
 
-    public function inspection(): BelongsTo {
+    public function inspection(): BelongsTo
+    {
         return $this->belongsTo(Inspection::class);
     }
 
-    public function pertainsTo(): BelongsTo {
+    public function pertainsTo(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'pertains_to');
     }
 
-    public function comment(): HasOne {
+    public function comment(): HasOne
+    {
         return $this->hasOne(Comment::class);
     }
 

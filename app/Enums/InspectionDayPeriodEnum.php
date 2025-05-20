@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Enums;
 
@@ -12,10 +14,10 @@ use Carbon\Carbon;
  */
 final class InspectionDayPeriodEnum extends Enum
 {
-    const MORNING = 0;
-    const AFTERNOON = 1;
-    const EVENING = 2;
-    const NIGHT = 3;
+    public const MORNING = 0;
+    public const AFTERNOON = 1;
+    public const EVENING = 2;
+    public const NIGHT = 3;
 
     public static function getPeriodFromDateTime(Carbon $dateTime): int
     {
@@ -24,15 +26,15 @@ final class InspectionDayPeriodEnum extends Enum
         if ($hour >= 5 && $hour < 12) {
             return self::MORNING;
         }
-        
+
         if ($hour >= 12 && $hour < 17) {
             return self::AFTERNOON;
         }
-        
+
         if ($hour >= 17 && $hour < 20) {
             return self::EVENING;
         }
-        
+
         return self::NIGHT;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Notifications\DeficiencyReminderNotification;
@@ -10,7 +12,8 @@ use Illuminate\Queue\SerializesModels;
 
 class DeficiencyReminderScheduledJob implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Execute the job.
@@ -19,7 +22,7 @@ class DeficiencyReminderScheduledJob implements ShouldQueue
     {
         // Resolve the dependency at runtime.
         $deficiencies = $deficiencyQueries->getPendingDeficiencies();
-        
+
         foreach ($deficiencies as $deficiency) {
             $deficiency->pertainsTo->notify(new DeficiencyReminderNotification($deficiency));
         }

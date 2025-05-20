@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Deficiency;
 
 use Illuminate\Foundation\Http\FormRequest;

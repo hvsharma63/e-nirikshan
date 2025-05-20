@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Database\Seeders;
 
@@ -62,11 +64,13 @@ class DesignationSeeder extends Seeder
         }
     }
 
-    private function seedZones(): void 
+    private function seedZones(): void
     {
         Log::info('Seeding zones...');
         $csv = database_path('data/zones.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows); // header
@@ -82,7 +86,7 @@ class DesignationSeeder extends Seeder
             ]);
         }
 
-        $zones->chunk(5000)->each(fn($chunk) => Zone::insert($chunk->toArray()));
+        $zones->chunk(5000)->each(fn ($chunk) => Zone::insert($chunk->toArray()));
         Log::info('Zones seeded successfully');
     }
 
@@ -90,7 +94,9 @@ class DesignationSeeder extends Seeder
     {
         Log::info('Seeding divisions...');
         $csv = database_path('data/divisions.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows);
@@ -107,7 +113,7 @@ class DesignationSeeder extends Seeder
             ]);
         }
 
-        $divs->chunk(5000)->each(fn($c) => Division::insert($c->toArray()));
+        $divs->chunk(5000)->each(fn ($c) => Division::insert($c->toArray()));
         Log::info('Divisions seeded successfully');
     }
 
@@ -115,7 +121,9 @@ class DesignationSeeder extends Seeder
     {
         Log::info('Seeding departments...');
         $csv = database_path('data/departments.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows);
@@ -131,7 +139,7 @@ class DesignationSeeder extends Seeder
             ]);
         }
 
-        $deps->chunk(5000)->each(fn($c) => Department::insert($c->toArray()));
+        $deps->chunk(5000)->each(fn ($c) => Department::insert($c->toArray()));
         Log::info('Departments seeded successfully');
     }
 
@@ -139,7 +147,9 @@ class DesignationSeeder extends Seeder
     {
         Log::info('Seeding division_departments pivot table...');
         $csv = database_path('data/division_departments.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows);
@@ -155,7 +165,7 @@ class DesignationSeeder extends Seeder
             ]);
         }
 
-        $pivots->chunk(5000)->each(fn($c) => DB::table('division_departments')->insert($c->toArray()));
+        $pivots->chunk(5000)->each(fn ($c) => DB::table('division_departments')->insert($c->toArray()));
         Log::info('Division_departments pivot table seeded successfully');
     }
 
@@ -163,7 +173,9 @@ class DesignationSeeder extends Seeder
     {
         Log::info('Seeding stations...');
         $csv = database_path('data/stations.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows);
@@ -182,7 +194,7 @@ class DesignationSeeder extends Seeder
             ]);
         }
 
-        $stations->chunk(5000)->each(fn($c) => Station::insert($c->toArray()));
+        $stations->chunk(5000)->each(fn ($c) => Station::insert($c->toArray()));
         Log::info('Stations seeded successfully');
     }
 
@@ -190,7 +202,9 @@ class DesignationSeeder extends Seeder
     {
         Log::info('Seeding designations...');
         $csv = database_path('data/designations.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows);
@@ -206,7 +220,7 @@ class DesignationSeeder extends Seeder
             ]);
         }
 
-        $designations->chunk(5000)->each(fn($c) => Designation::insert($c->toArray()));
+        $designations->chunk(5000)->each(fn ($c) => Designation::insert($c->toArray()));
         Log::info('Designations seeded successfully');
     }
 
@@ -222,7 +236,7 @@ class DesignationSeeder extends Seeder
     protected function seedPermissions(): void
     {
         Log::info('Seeding permissions…');
-    
+
         // Officer (own-data)
         $officerPerms = collect([
             // Inspections (own)
@@ -230,43 +244,43 @@ class DesignationSeeder extends Seeder
             PermissionEnum::viewOwn(ModuleEnum::INSPECTIONS()),
             PermissionEnum::createOwn(ModuleEnum::INSPECTIONS()),
             PermissionEnum::editOwn(ModuleEnum::INSPECTIONS()),
-    
+
             // Deficiencies (own)
             PermissionEnum::listOwn(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::viewOwn(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::createOwn(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::editOwn(ModuleEnum::DEFICIENCIES()),
-    
+
             // Misc. module-scoped
             PermissionEnum::remind(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::attend(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::downloadOwn(ModuleEnum::INSPECTION_NOTE()),
             PermissionEnum::viewOwn(ModuleEnum::INSPECTION_NOTE()),
-    
+
             // Global
             PermissionEnum::viewDashboard(),
             PermissionEnum::listUsers(),
         ]);
-    
+
         $officerPerms->unique()->each(function (string $perm) {
             $p = Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
             $this->createdPermissionsForOfficer[] = $p;
         });
-    
+
         // Admin (all-data)
         $adminPerms = collect([
             // Inspections (all)
             PermissionEnum::listAll(ModuleEnum::INSPECTIONS()),
             PermissionEnum::viewAll(ModuleEnum::INSPECTIONS()),
-            
+
             // Deficiencies (all)
             PermissionEnum::listAll(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::viewAll(ModuleEnum::DEFICIENCIES()),
-            
+
             // Users (all)
             PermissionEnum::listAll(ModuleEnum::USERS()),
             PermissionEnum::viewAll(ModuleEnum::USERS()),
-            
+
             // Inspection Notes (all)
             PermissionEnum::viewAll(ModuleEnum::INSPECTION_NOTE()),
             PermissionEnum::downloadAll(ModuleEnum::INSPECTION_NOTE()),
@@ -275,20 +289,20 @@ class DesignationSeeder extends Seeder
             PermissionEnum::remind(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::attend(ModuleEnum::DEFICIENCIES()),
             PermissionEnum::download(ModuleEnum::INSPECTION_NOTE()),
-    
+
             // Global
             PermissionEnum::viewDashboard(),
             PermissionEnum::viewDashboardStats(),
         ]);
-    
+
         $adminPerms->unique()->each(function (string $perm) {
             $p = Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
             $this->createdPermissionsForAdmin[] = $p;
         });
-    
+
         Log::info('Permissions seeded successfully');
     }
-    
+
 
     protected function assignPermissionsToRoles(): void
     {
@@ -312,7 +326,9 @@ class DesignationSeeder extends Seeder
     {
         Log::info('Seeding users...');
         $csv = database_path('data/users.csv');
-        if (! file_exists($csv)) return;
+        if (! file_exists($csv)) {
+            return;
+        }
 
         $rows = array_map('str_getcsv', file($csv));
         array_shift($rows);
@@ -326,11 +342,11 @@ class DesignationSeeder extends Seeder
             $user = $users[$r[6]];
             $designationParts = explode('/', $r[3]);
             $post = Designation::where('short_name', $designationParts[0])->first();
-            $divDept = DivisionDepartment::whereHas('division', fn($q)=> $q->where('short_name','RJT'))
-                         ->whereHas('department', fn($q)=> $q->where('short_name',$designationParts[1]))
+            $divDept = DivisionDepartment::whereHas('division', fn ($q) => $q->where('short_name', 'RJT'))
+                         ->whereHas('department', fn ($q) => $q->where('short_name', $designationParts[1]))
                          ->first();
-            $station = Station::whereHas('division', fn($q)=> $q->where('short_name','RJT'))
-                         ->where('short_name',$designationParts[2])
+            $station = Station::whereHas('division', fn ($q) => $q->where('short_name', 'RJT'))
+                         ->where('short_name', $designationParts[2])
                          ->first();
 
             $user->userDesignations()->create([

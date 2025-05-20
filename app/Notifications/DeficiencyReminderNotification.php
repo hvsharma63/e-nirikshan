@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Deficiency;
@@ -22,7 +24,7 @@ class DeficiencyReminderNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Reminder: Action Required for Reported Deficiency')
             ->markdown('emails.deficiency-reminder', [
                 'deficiency' => $this->deficiency,

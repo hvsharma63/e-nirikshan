@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Officer;
 
 use App\Http\Controllers\Controller;
@@ -30,7 +32,7 @@ class DeficiencyController extends Controller
         private DeficiencyService $deficiencyService
     ) {
     }
-    
+
     public function index(): Response
     {
         return Inertia::render('officer/deficiencies/List');
@@ -40,55 +42,59 @@ class DeficiencyController extends Controller
     {
         $deficiency = $this->deficiencyService->view($id, Auth::id());
 
-        return Inertia::render('officer/deficiencies/View',[
+        return Inertia::render('officer/deficiencies/View', [
             'deficiency' => new ViewResource($deficiency)
         ]);
     }
 
-    public function remind(int $id): RedirectResponse {
+    public function remind(int $id): RedirectResponse
+    {
 
         $deficiency = $this->deficiencyQueries->get($id);
-        
+
         dispatch(new SendDeficiencyNotificationJob($deficiency));
-        
+
         return Redirect::route('officer.inspections.view', ['id' => $id])
             ->with('success', "Reminder Sent Successfully");
     }
 
-    public function attend(int $id, AttendDeficiencyRequest $request): RedirectResponse {
+    public function attend(int $id, AttendDeficiencyRequest $request): RedirectResponse
+    {
         DB::beginTransaction();
         try {
             $data = $request->validated();
-            
+
             $this->deficiencyService->attend($id, Auth::id(), $data);
-            
+
             DB::commit();
-            
+
             return Redirect::route('officer.deficiencies.view', ['id' => $id])
                 ->with('success', "Deficiency Attended Successfully");
-            
+
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
         }
     }
 
-    public function list(Request $request): AnonymousResourceCollection {
+    public function list(Request $request): AnonymousResourceCollection
+    {
         $deficiencies = $this->deficiencyQueries->list(Auth::id());
         return ListResource::collection($deficiencies);
     }
 
 
-    private function getNote(int $id): ?Inspection {
+    private function getNote(int $id): ?Inspection
+    {
         return $this->inspectionQueries->viewNoteByPertainingOfficer($id, Auth::id());
     }
-    
+
     public function viewNote(int $id): HttpResponse
     {
         $inspection = $this->getNote($id);
 
-         return Pdf::loadView('pdfs.note', ['inspection' => $inspection])
-            ->stream('inspection-note.pdf');
+        return Pdf::loadView('pdfs.note', ['inspection' => $inspection])
+           ->stream('inspection-note.pdf');
     }
 
     public function downloadNote(int $id): HttpResponse

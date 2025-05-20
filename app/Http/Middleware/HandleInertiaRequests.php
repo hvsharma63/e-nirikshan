@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
@@ -49,7 +51,7 @@ class HandleInertiaRequests extends Middleware
 
         // Retrieve the roles and permissions, ensuring we handle null values properly
         $roles = $loggedInUser ? $loggedInUser->getRoleNames() : [];
-        $permissions = $loggedInUser? $loggedInUser->getAllPermissions()->pluck('name') : [];
+        $permissions = $loggedInUser ? $loggedInUser->getAllPermissions()->pluck('name') : [];
 
         return [
             ...parent::share($request),
@@ -61,7 +63,7 @@ class HandleInertiaRequests extends Middleware
                 'permissions' => $permissions,
             ],
             'ziggy' => [
-                ...(new Ziggy)->toArray(),
+                ...(new Ziggy())->toArray(),
                 'location' => $request->url(),
             ],
             'flash' => [

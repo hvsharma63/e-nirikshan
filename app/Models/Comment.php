@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,11 +16,13 @@ class Comment extends Model
     ];
 
 
-    public function deficiency(): BelongsTo{
+    public function deficiency(): BelongsTo
+    {
         return $this->belongsTo(Deficiency::class);
     }
 
-    public function user(): BelongsTo{
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'comment_by');
     }
 }

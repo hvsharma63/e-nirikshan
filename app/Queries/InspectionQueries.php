@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Queries;
 
 use App\Models\Deficiency;
@@ -8,12 +10,13 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class InspectionQueries {
-
+class InspectionQueries
+{
     public $fromDate = null;
     public $toDate = null;
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
 
@@ -23,12 +26,14 @@ class InspectionQueries {
         $this->toDate = $to;
     }
 
-    public function create(array $inspectionData): Inspection {  
+    public function create(array $inspectionData): Inspection
+    {
         return Inspection::query()
             ->create($inspectionData);
     }
 
-    public function list(int $userId): LengthAwarePaginator {
+    public function list(int $userId): LengthAwarePaginator
+    {
         return Inspection::query()
             ->select(['id', 'location', 'datetime', 'day_period', 'status'])
             ->withCount(['deficiencies'])
@@ -37,7 +42,8 @@ class InspectionQueries {
             ->paginate(10);
     }
 
-    public function get(int $inspectionId, ?int $userId= null): ?Inspection {
+    public function get(int $inspectionId, ?int $userId = null): ?Inspection
+    {
         return Inspection::query()
             ->select(['id','location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
             ->withOnly([
@@ -52,7 +58,8 @@ class InspectionQueries {
             ->findOrFail($inspectionId);
     }
 
-    public function viewNotePdfByInspectingOfficer(int $inspectionId, int $userId): ?Inspection {
+    public function viewNotePdfByInspectingOfficer(int $inspectionId, int $userId): ?Inspection
+    {
         return Inspection::query()
             ->select(['id','location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
             ->withOnly([
@@ -66,7 +73,8 @@ class InspectionQueries {
             ->findOrFail($inspectionId);
     }
 
-    public function viewNoteByPertainingOfficer(int $inspectionId, int $userId): ?Inspection {
+    public function viewNoteByPertainingOfficer(int $inspectionId, int $userId): ?Inspection
+    {
         return Inspection::query()
             ->select(['id', 'location', 'datetime', 'attended_by', 'day_period', 'no_deficiencies_found', 'status'])
             ->whereHas('deficiencies.pertainsTo', function ($query) use ($userId) {
@@ -81,13 +89,15 @@ class InspectionQueries {
             ->findOrFail($inspectionId);
     }
 
-    public function update(int $inspectionId, array $inspectionData): void {
+    public function update(int $inspectionId, array $inspectionData): void
+    {
         Inspection::query()
             ->where('id', $inspectionId)
             ->update($inspectionData);
     }
 
-    public function getInspectionsCount(): int {
+    public function getInspectionsCount(): int
+    {
         return Inspection::query()
         ->when($this->fromDate && $this->toDate, function ($query) {
             $query->whereBetween('datetime', [$this->fromDate, $this->toDate]);
@@ -117,7 +127,7 @@ class InspectionQueries {
             });
         }
 
-        if($userIds) {
+        if ($userIds) {
             $query->whereIn('attended_by', $userIds);
         }
 
@@ -144,7 +154,8 @@ class InspectionQueries {
      * @param array $deficiencies An array of deficiency data to be created.
      * @return \Illuminate\Support\Collection<\App\Models\Deficiency> Collection of created Deficiency models.
      */
-    public function createManyDeficiencies(Inspection $inspection, array $deficiencies): Collection {
+    public function createManyDeficiencies(Inspection $inspection, array $deficiencies): Collection
+    {
         return $inspection->deficiencies()->createMany($deficiencies);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Queries\CommentQueries;
@@ -7,8 +9,8 @@ use App\Queries\DeficiencyQueries;
 use App\Queries\InspectionQueries;
 use Carbon\Carbon;
 
-class DashboardService {
-
+class DashboardService
+{
     public function __construct(
         private DeficiencyQueries $deficiencyQueries,
         private InspectionQueries $inspectionQueries,
@@ -16,27 +18,28 @@ class DashboardService {
     ) {
     }
 
-    public function stats(string $timeRange): array {
+    public function stats(string $timeRange): array
+    {
 
         $fromDate = null;
         $toDate = null;
-    
+
         switch ($timeRange) {
             case 'today':
                 $fromDate = Carbon::today();
                 $toDate = Carbon::today()->endOfDay();
                 break;
-    
+
             case 'this_week':
                 $fromDate = Carbon::now()->startOfWeek(); // default Monday
                 $toDate = Carbon::now()->endOfWeek();
                 break;
-    
+
             case 'this_month':
                 $fromDate = Carbon::now()->startOfMonth();
                 $toDate = Carbon::now()->endOfMonth();
                 break;
-    
+
             case 'this_financial_year':
                 $now = Carbon::now();
                 $fromDate = $now->month < 4
@@ -44,13 +47,13 @@ class DashboardService {
                     : Carbon::create($now->year, 4, 1);
                 $toDate = $fromDate->copy()->addYear()->subDay();
                 break;
-    
+
             case 'overall':
             default:
                 // No date range filter
                 break;
         }
-    
+
         // Pass date range to query classes if applicable
         if ($fromDate && $toDate) {
             $this->inspectionQueries->setDateRange($fromDate, $toDate);
