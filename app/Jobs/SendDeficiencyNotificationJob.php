@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Models\Deficiency;
+use App\Models\User;
 use App\Notifications\DeficiencyReportedNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,9 +30,10 @@ class SendDeficiencyNotificationJob implements ShouldQueue
     public function handle(): void
     {
         $this->deficiency->load('pertainsTo');
+        $user = $this->deficiency->pertainsTo;
 
-        if ($this->deficiency->pertainsTo) {
-            $this->deficiency->pertainsTo->notify(new DeficiencyReportedNotification($this->deficiency));
+        if ($user instanceof User) {
+            $user->notify(new DeficiencyReportedNotification($this->deficiency));
         }
     }
 }

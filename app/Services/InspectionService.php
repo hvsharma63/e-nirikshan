@@ -6,10 +6,12 @@ namespace App\Services;
 
 use App\Enums\InspectionStatusEnum;
 use App\Jobs\SendDeficiencyNotificationJob;
+use App\Models\Deficiency;
 use App\Models\Inspection;
 use App\Queries\InspectionQueries;
 use App\Queries\TemporaryUploadQueries;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -21,8 +23,9 @@ class InspectionService
     ) {
     }
 
-    public function createInspection(array $inspectionData)
+    public function createInspection(array $inspectionData): Inspection
     {
+        /** @var array $deficiencies */
         $deficiencies = $inspectionData["deficiencies"];
         $yetToBeCreatedDeficiencies = $inspectionData["deficiencies"];
 
@@ -33,19 +36,25 @@ class InspectionService
         $inspection = $this->inspectionQueries->create(
             Arr::except($inspectionData, [
                 'deficiencies',
-                'temporary_upload_uuid',
                 'is_draft',
             ])
         );
 
         if (!empty($deficiencies)) {
+            
+            $deficienciesToBeCreated = Arr::map($deficiencies, function ($item) {
+                return Arr::except($item, ['temporary_upload_uuid']);
+            });
+
+            /** @var Collection<int, Deficiency> $deficiencies */
             $deficiencies = $this->inspectionQueries->createManyDeficiencies(
                 $inspection,
-                Arr::except($deficiencies, 'temporary_upload_uuid')
+    $deficienciesToBeCreated
             );
 
             foreach ($deficiencies as $index => $deficiency) {
-
+                /** @var Deficiency $deficiency */
+                
                 if (!empty($yetToBeCreatedDeficiencies[$index]['temporary_upload_uuid'])) {
                     $temporaryUploadRecord = $this->temporaryUploadQueries->getTemporaryUploads($yetToBeCreatedDeficiencies[$index]['temporary_upload_uuid'], Auth::id());
 

@@ -8,9 +8,10 @@ use BenSampo\Enum\Enum;
 use Carbon\Carbon;
 
 /**
- * @method static static OptionOne()
- * @method static static OptionTwo()
- * @method static static OptionThree()
+ * @method static static MORNING()
+ * @method static static AFTERNOON()
+ * @method static static EVENING()
+ * @method static static NIGHT()
  */
 final class InspectionDayPeriodEnum extends Enum
 {

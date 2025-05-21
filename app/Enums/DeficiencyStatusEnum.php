@@ -6,6 +6,11 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
+/**
+ * @method static static PENDING()
+ * @method static static SEEN()
+ * @method static static ATTENDED()
+ */
 final class DeficiencyStatusEnum extends Enum
 {
     public const PENDING = 0;

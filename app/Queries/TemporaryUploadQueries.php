@@ -23,7 +23,7 @@ class TemporaryUploadQueries
             ->toMediaCollection('temporary_uploads');
     }
 
-    public function firstOrCreate(?string $uuid = null, string $userId): TemporaryUpload
+    public function firstOrCreate(int $userId, ?string $uuid = null): TemporaryUpload
     {
         return TemporaryUpload::firstOrCreate(
             ['uuid' => $uuid, 'user_id' => $userId],
@@ -31,7 +31,7 @@ class TemporaryUploadQueries
         );
     }
 
-    public function getTemporaryUploads(string $uuid, string $userId): ?TemporaryUpload
+    public function getTemporaryUploads(string $uuid, int $userId): ?TemporaryUpload
     {
         return TemporaryUpload::where('uuid', $uuid)
             ->where('user_id', $userId)

@@ -36,8 +36,8 @@ class MediaController extends Controller
             DB::beginTransaction();
 
             $temporaryUploadRecord = $this->temporaryUploadQueries->firstOrCreate(
-                $request->input('uuid'),
-                Auth::id()
+                Auth::id(),
+                $request->input('uuid')
             );
 
             $media = $this->temporaryUploadQueries->upload(

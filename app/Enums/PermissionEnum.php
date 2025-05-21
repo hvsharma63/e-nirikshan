@@ -6,6 +6,18 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
+/**
+ * @method static static LIST_OWN()
+ * @method static static VIEW_OWN()
+ * @method static static DOWNLOAD_OWN()
+ * @method static static CREATE_OWN()
+ * @method static static EDIT_OWN()
+ * @method static static LIST_ALL()
+ * @method static static VIEW_ALL()
+ * @method static static DOWNLOAD_ALL()
+ * @method static static CREATE_ALL()
+ * @method static static EDIT_ALL()
+ */
 final class PermissionEnum extends Enum
 {
     // CORE ACTIONS - own vs. all

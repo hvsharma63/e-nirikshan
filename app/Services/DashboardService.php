@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Queries\CommentQueries;
 use App\Queries\DeficiencyQueries;
 use App\Queries\InspectionQueries;
 use Carbon\Carbon;
@@ -14,7 +13,6 @@ class DashboardService
     public function __construct(
         private DeficiencyQueries $deficiencyQueries,
         private InspectionQueries $inspectionQueries,
-        private CommentQueries $commentQueries
     ) {
     }
 
