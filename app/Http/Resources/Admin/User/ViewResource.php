@@ -40,7 +40,7 @@ class ViewResource extends JsonResource
             'deficiency_statistics' => [
                 'attended' => $user->deficiencies_attended_count,
                 'seen' => $user->deficiencies_seen_count,
-                'pending' => $user->deficiencies_in_pending_count,
+                'pending' => $user->deficiencies_pending_count,
                 'total' => $user->deficiencies_total_count,
             ],
             'recent_inspections' => $user->recentInspections->map(function ($inspection) {

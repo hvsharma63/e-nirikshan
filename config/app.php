@@ -125,4 +125,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'database_backup_to_email_address' => env('APP_DATABASE_BACKUP_TO_EMAIL_ADDRESS', 'rjtwritcell@gmail.com'),
 ];

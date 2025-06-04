@@ -32,6 +32,8 @@ class DumpAndEmailDatabaseJob implements ShouldQueue
         try {
             MySql::create()
                 ->setDbName($db['database'])
+                ->setUserName($db['username'])
+                ->setPassword($db['password'])
                 ->dumpToFile($fullPath);
         } catch (\Exception $e) {
             Log::error("DB Dump failed: " . $e->getMessage());
@@ -39,7 +41,9 @@ class DumpAndEmailDatabaseJob implements ShouldQueue
         }
 
         try {
-            Notification::route('mail', env('BACKUP_TO_EMAIL_ADDRESS'))
+            $emailAddress = config('app.database_backup_to_email_address');
+
+            Notification::route('mail', $emailAddress)
                 ->notify(new DatabaseDumpNotification($fullPath, $filename));
         } catch (\Exception $e) {
             Log::error("Mail sending failed: " . $e->getMessage());
