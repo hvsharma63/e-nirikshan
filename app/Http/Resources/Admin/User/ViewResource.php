@@ -23,7 +23,7 @@ class ViewResource extends JsonResource
     {
         /** @var User $user */
         $user = $this;
-        
+
         return [
             'id' => $user->id,
             'name' => $user->name,

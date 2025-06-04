@@ -41,7 +41,7 @@ class InspectionService
         );
 
         if (!empty($deficiencies)) {
-            
+
             $deficienciesToBeCreated = Arr::map($deficiencies, function ($item) {
                 return Arr::except($item, ['temporary_upload_uuid']);
             });
@@ -49,12 +49,12 @@ class InspectionService
             /** @var Collection<int, Deficiency> $deficiencies */
             $deficiencies = $this->inspectionQueries->createManyDeficiencies(
                 $inspection,
-    $deficienciesToBeCreated
+                $deficienciesToBeCreated
             );
 
             foreach ($deficiencies as $index => $deficiency) {
                 /** @var Deficiency $deficiency */
-                
+
                 if (!empty($yetToBeCreatedDeficiencies[$index]['temporary_upload_uuid'])) {
                     $temporaryUploadRecord = $this->temporaryUploadQueries->getTemporaryUploads($yetToBeCreatedDeficiencies[$index]['temporary_upload_uuid'], Auth::id());
 

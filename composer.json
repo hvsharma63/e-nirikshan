@@ -1,11 +1,12 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "indian-railways/ghaat-nirikshan",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "A web application designed specifically for Ambush Checks, enabling Inspecting Officers to seamlessly record observations and deficiencies.",
     "keywords": [
-        "laravel",
-        "framework"
+        "ghaat nirikshan",
+        "indian railways",
+        "western railway"
     ],
     "license": "MIT",
     "require": {
