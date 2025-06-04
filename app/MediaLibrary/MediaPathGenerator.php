@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MediaLibrary;
 
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
@@ -11,7 +13,7 @@ class MediaPathGenerator implements PathGenerator
     {
         switch (true) {
             case $media->collection_name === 'deficiency_photos'
-                && $media->model_type === \App\Models\Deficiency::class:
+            && $media->model_type === \App\Models\Deficiency::class:
                 return 'deficiencies/';
 
             case $media->model_type === \App\Models\TemporaryUpload::class:

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Queries\TemporaryUploadQueries;
@@ -13,7 +15,8 @@ class MediaController extends Controller
 {
     public function __construct(
         private TemporaryUploadQueries $temporaryUploadQueries,
-    ){}
+    ) {
+    }
 
     public function uploadTemporarily(Request $request)
     {
@@ -33,8 +36,8 @@ class MediaController extends Controller
             DB::beginTransaction();
 
             $temporaryUploadRecord = $this->temporaryUploadQueries->firstOrCreate(
-                $request->input('uuid'),
-                Auth::id()
+                Auth::id(),
+                $request->input('uuid')
             );
 
             $media = $this->temporaryUploadQueries->upload(
@@ -57,7 +60,7 @@ class MediaController extends Controller
         }
     }
 
-     public function view(Request $request, Media $media)
+    public function view(Request $request, Media $media)
     {
         $disk = $media->disk; // e.g., 'public' or 'private'
         $path = $media->getPathRelativeToRoot();

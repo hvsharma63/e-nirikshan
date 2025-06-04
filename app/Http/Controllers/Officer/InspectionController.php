@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Officer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inspection\InspectionCreateRequest;
 use App\Http\Resources\Officer\Inspection\ListResource;
 use App\Http\Resources\Common\ViewInspectionResource;
-use App\Models\Inspection;
 use App\Queries\InspectionQueries;
 use App\Queries\UserQueries;
 use App\Services\InspectionService;
@@ -21,11 +22,9 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
-
 class InspectionController extends Controller
 {
-
-    public function  __construct(
+    public function __construct(
         private InspectionService $inspectionService,
         private InspectionQueries $inspectionQueries,
         private UserQueries $userQueries,
@@ -60,7 +59,7 @@ class InspectionController extends Controller
     public function view(int $id): Response
     {
         $inspection = $this->inspectionQueries->get($id, Auth::id());
-        
+
         return Inertia::render('officer/inspections/View', [
             'inspection' => new ViewInspectionResource($inspection),
         ]);
@@ -68,7 +67,7 @@ class InspectionController extends Controller
 
     public function list(Request $request): AnonymousResourceCollection
     {
-        
+
         $inspections = $this->inspectionQueries->list(Auth::id());
 
         return ListResource::collection($inspections);
@@ -87,7 +86,7 @@ class InspectionController extends Controller
         $inspection = $this->inspectionService->getNoteByInspectingOfficer($id, Auth::id());
 
         $fileName = 'inspection-note-' . now()->format('Y-m-d_H-i-s') . '.pdf';
-        
+
         return Pdf::loadView('pdfs.note', ['inspection' => $inspection])
             ->download($fileName);
     }

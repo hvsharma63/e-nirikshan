@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Inspection;
 
 use App\Enums\InspectionDayPeriodEnum;
@@ -44,8 +46,8 @@ class InspectionCreateRequest extends FormRequest
     {
         return [
             'deficiencies.required_if' => 'The deficiency field is required.',
-            'deficiencies.*.note'=> 'Please mention the deficiency note.',
-            'deficiencies.*.pertains_to'=> 'Please select an officer.',
+            'deficiencies.*.note' => 'Please mention the deficiency note.',
+            'deficiencies.*.pertains_to' => 'Please select an officer.',
             'deficiencies.*.images.*.max' => 'Selected Image #:second-position may not be greater than 2MB.',
         ];
     }

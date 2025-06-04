@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Enums\RoleEnum;
@@ -18,14 +20,15 @@ class DashboardController extends Controller
 
     public function index()
     {
-        if(Auth::user()->hasRole(RoleEnum::ADMIN)) {
+        if (Auth::user()->hasRole(RoleEnum::ADMIN)) {
             return Inertia::render('admin/Dashboard');
         }
-        
+
         return Inertia::render('officer/Dashboard');
     }
 
-    public function stats(Request $request) {
+    public function stats(Request $request)
+    {
         $timeRange = $request->input('time_range');
 
         $stats = $this->dashboardService->stats($timeRange);
