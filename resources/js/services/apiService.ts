@@ -17,7 +17,6 @@ export default {
             const response = await axios.post(url, data, config);
             return response.data;
         } catch (error) {
-            toastError('Something Went Wrong!');
             throw error;
         }
     },

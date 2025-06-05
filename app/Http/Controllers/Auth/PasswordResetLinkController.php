@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Queries\UserQueries;
-use App\Queries\UserQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -13,7 +14,6 @@ use Inertia\Response;
 
 class PasswordResetLinkController extends Controller
 {
-
     public function __construct(
         private UserQueries $userQueries,
     ) {

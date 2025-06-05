@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Officer\Inspection;
 
 use App\Enums\DeficiencyStatusEnum;
+use App\Http\Resources\Common\MediaResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,7 +24,10 @@ class ItemDeficiencyResource extends JsonResource
             'is_pending' => $this->is_pending,
             'is_seen' => $this->is_seen,
             'is_attended' => $this->is_attended,
-            'comment_by_pertaining_officer' => $this->comment->comment ?? 'No Response'
+            'comment_by_pertaining_officer' => $this->comment->comment ?? 'No Response',
+            'media' => MediaResource::collection(
+                $this->whenLoaded('media')
+            ),
         ];
     }
 }

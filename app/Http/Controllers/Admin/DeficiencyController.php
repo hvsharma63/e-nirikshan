@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -25,7 +27,7 @@ class DeficiencyController extends Controller
         private UserQueries $userQueries,
     ) {
     }
-    
+
     public function index(): Response
     {
         $users = $this->userQueries->getUsers();
@@ -35,14 +37,15 @@ class DeficiencyController extends Controller
         ]);
     }
 
-    public function list(Request $request): AnonymousResourceCollection {
-        
+    public function list(Request $request): AnonymousResourceCollection
+    {
+
         if ($request->query('from') && $request->query('to')) {
             $from = Carbon::parse($request->query('from'));
             $to = Carbon::parse($request->query('to'));
             $this->deficiencyQueries->setDateRange($from, $to);
         }
-        
+
         $search = $request->query('search') ?? null;
         $inspector = $request->query('inspector') ?? null;
         $pertaining_officer = $request->query('pertaining_officer') ?? null;
@@ -52,7 +55,7 @@ class DeficiencyController extends Controller
             $inspector,
             $pertaining_officer
         );
-        
+
         return ListResource::collection($deficiencies);
     }
 
@@ -60,7 +63,7 @@ class DeficiencyController extends Controller
     {
         $deficiency = $this->deficiencyQueries->viewForAdmin($id);
 
-        return Inertia::render('admin/deficiencies/View',[
+        return Inertia::render('admin/deficiencies/View', [
             'deficiency' => new ViewResource($deficiency)
         ]);
     }

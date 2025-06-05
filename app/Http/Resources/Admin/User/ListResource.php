@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Admin\User;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,14 +17,17 @@ class ListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var User $user */
+        $user = $this->resource;
+
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'pf_no' => $this->pf_no,
-            'mobile_no' => $this->mobile_no,
-            'designation' => $this->activeDesignation->address_asc,
-            'deficiencies_attended_count' => $this->deficiencies_attended_count,
-            'inspections_attended_count' => $this->inspections_attended_count,
+            'id' => $user->id,
+            'name' => $user->name,
+            'pf_no' => $user->pf_no,
+            'mobile_no' => $user->mobile_no,
+            'designation' => $user->activeDesignation?->address_asc,
+            'deficiencies_attended_count' => $user->deficiencies_attended_count,
+            'inspections_attended_count' => $user->inspections_attended_count,
         ];
     }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -13,7 +13,6 @@ import {
     Calendar,
     Sun,
     User,
-    Building2,
     ClipboardList
 } from 'lucide-vue-next';
 import {
@@ -25,6 +24,7 @@ import {
 import type { SharedData, ViewInspection, ItemDeficiency } from '@/types';
 import apiService from '@/services/apiService';
 import { toast } from '@/components/ui/toast';
+import ImageGallery from '@/components/ui/images/Gallery.vue';
 
 const breadcrumbs = [
     {
@@ -206,6 +206,9 @@ onMounted(() => {
                                             <p class="text-gray-700">
                                                 {{ deficiency.note }}
                                             </p>
+
+                                            <ImageGallery :images="deficiency.media || []" />
+
                                             <div class="mt-3 text-sm text-gray-500">
                                                 Inspected on {{ deficiency.reported_on }}
                                             </div>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\InspectionDayPeriodEnum;
@@ -35,6 +37,6 @@ class Inspection extends Model
 
     public function attendedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class,'attended_by');
+        return $this->belongsTo(User::class, 'attended_by');
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\User\ListResource;
 use App\Http\Resources\Common\ListUserDropdownResource;
 use App\Models\User;
 use App\Queries\UserQueries;
@@ -16,14 +17,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
-use Str;
 
 class RegisteredUserController extends Controller
 {
-
     public function __construct(
         private UserQueries $userQueries,
-    ){}
+    ) {
+    }
 
     /**
      * Show the registration page.
@@ -59,7 +59,8 @@ class RegisteredUserController extends Controller
         return to_route('dashboard.index');
     }
 
-    public function listBranchOfficers(): JsonResource {
+    public function listBranchOfficers(): JsonResource
+    {
 
         $users = $this->userQueries->getBranchOfficers(Auth::id());
 
